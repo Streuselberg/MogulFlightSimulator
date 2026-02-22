@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project Mogul — Balloon Debris Field Simulation</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Oswald:wght@300;400;600&display=swap');
+
+  :root {
+    --bg: #0a0c0f;
+    --panel: #111418;
+    --border: #1e2830;
+    --accent: #e8c84a;
+    --accent2: #4ae8c8;
+    --danger: #e84a4a;
+    --text: #c8d4dc;
+    --muted: #5a6a74;
+    --balloon: #d4a832;
+    --reflector: #8888ff;
+    --radar: #4a8ae8;
+    --foil: #cccccc;
+    --rope: #8b6914;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Share Tech Mono', monospace;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  header {
+    background: var(--panel);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+
+  .title-block h1 {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: var(--accent);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  .title-block p {
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 2px;
+    margin-top: 2px;
+  }
+
+  .classification {
+    font-size: 0.65rem;
+    color: var(--danger);
+    letter-spacing: 3px;
+    border: 1px solid var(--danger);
+    padding: 3px 8px;
+    animation: blink 2s step-end infinite;
+  }
+
+  @keyframes blink { 50% { opacity: 0.4; } }
+
+  .main {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  /* LEFT PANEL */
+  .controls {
+    width: 230px;
+    background: var(--panel);
+    border-right: 1px solid var(--border);
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    overflow-y: auto;
+    flex-shrink: 0;
+  }
+
+  .ctrl-section {
+    border: 1px solid var(--border);
+    padding: 10px;
+  }
+
+  .ctrl-section h3 {
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    color: var(--accent);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+
+  label {
+    font-size: 0.65rem;
+    color: var(--muted);
+    display: block;
+    margin-bottom: 3px;
+    letter-spacing: 1px;
+  }
+
+  input[type=range] {
+    width: 100%;
+    accent-color: var(--accent);
+    margin-bottom: 8px;
+  }
+
+  .val {
+    color: var(--accent2);
+    float: right;
+  }
+
+  button {
+    width: 100%;
+    padding: 8px;
+    background: transparent;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.15s;
+    margin-top: 4px;
+  }
+
+  button:hover { background: var(--accent); color: #000; }
+  button.danger { border-color: var(--danger); color: var(--danger); }
+  button.danger:hover { background: var(--danger); color: #fff; }
+
+  /* CANVAS AREA */
+  .canvas-wrap {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+  }
+
+  canvas {
+    flex: 1;
+    display: block;
+    cursor: crosshair;
+  }
+
+  .hud {
+    position: absolute;
+    top: 10px; right: 10px;
+    background: rgba(10,12,15,0.85);
+    border: 1px solid var(--border);
+    padding: 10px 14px;
+    font-size: 0.62rem;
+    line-height: 1.9;
+    min-width: 200px;
+  }
+
+  .hud span { color: var(--accent2); }
+
+  .status-bar {
+    background: var(--panel);
+    border-top: 1px solid var(--border);
+    padding: 5px 14px;
+    font-size: 0.62rem;
+    color: var(--muted);
+    display: flex;
+    gap: 20px;
+    flex-shrink: 0;
+  }
+
+  .status-bar em { color: var(--accent); font-style: normal; }
+
+  /* LEGEND */
+  .legend { display: flex; flex-direction: column; gap: 4px; }
+  .leg-item { display: flex; align-items: center; gap: 6px; font-size: 0.6rem; }
+  .leg-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+  /* RIGHT PANEL - stats */
+  .stats-panel {
+    width: 200px;
+    background: var(--panel);
+    border-left: 1px solid var(--border);
+    padding: 14px;
+    overflow-y: auto;
+    flex-shrink: 0;
+  }
+
+  .stats-panel h3 {
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    color: var(--accent);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+
+  .stat-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.62rem;
+    padding: 4px 0;
+    border-bottom: 1px solid var(--border);
+    color: var(--muted);
+  }
+  .stat-row span { color: var(--text); }
+
+  .debris-list {
+    margin-top: 10px;
+    font-size: 0.58rem;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+
+  .phase-indicator {
+    padding: 6px;
+    border: 1px solid var(--border);
+    margin-bottom: 6px;
+    font-size: 0.62rem;
+    text-align: center;
+  }
+
+  .phase-indicator.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(232,200,74,0.05);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="title-block">
+    <h1>Project Mogul — Flight No. 4 Debris Simulation</h1>
+    <p>NYU / USAF Constant Level Balloon Train · Foster Ranch, NM · July 1947</p>
+  </div>
+  <div class="classification">DECLASSIFIED 1994</div>
+</header>
+
+<div class="main">
+  <!-- LEFT CONTROLS -->
+  <div class="controls">
+    <div class="ctrl-section">
+      <h3>Balloon Train</h3>
+      <label>Balloons in train <span class="val" id="vBalloons">23</span></label>
+      <input type="range" id="nBalloons" min="5" max="30" value="23">
+
+      <label>Initial Altitude (ft) <span class="val" id="vAlt">60000</span></label>
+      <input type="range" id="initAlt" min="30000" max="100000" value="60000" step="1000">
+
+      <label>Train Length (ft) <span class="val" id="vLen">600</span></label>
+      <input type="range" id="trainLen" min="100" max="1200" value="600" step="50">
+    </div>
+
+    <div class="ctrl-section">
+      <h3>Atmosphere</h3>
+      <label>Wind Speed (kt) <span class="val" id="vWind">28</span></label>
+      <input type="range" id="windSpeed" min="5" max="80" value="28">
+
+      <label>Wind Direction (°) <span class="val" id="vWindDir">225</span></label>
+      <input type="range" id="windDir" min="0" max="359" value="225">
+
+      <label>Wind Shear (kt/kft) <span class="val" id="vShear">3</span></label>
+      <input type="range" id="windShear" min="0" max="10" value="3">
+
+      <label>Turbulence <span class="val" id="vTurb">Med</span></label>
+      <input type="range" id="turbulence" min="0" max="3" value="1" step="1">
+    </div>
+
+    <div class="ctrl-section">
+      <h3>Failure Mode</h3>
+      <label>Failure Alt (ft) <span class="val" id="vFailAlt">40000</span></label>
+      <input type="range" id="failAlt" min="5000" max="80000" value="40000" step="1000">
+
+      <label>Cascade Rate <span class="val" id="vCasc">Fast</span></label>
+      <input type="range" id="cascadeRate" min="1" max="3" value="2" step="1">
+    </div>
+
+    <div class="ctrl-section">
+      <h3>Simulation</h3>
+      <button id="btnRun">▶ LAUNCH MISSION</button>
+      <button id="btnPause">⏸ PAUSE</button>
+      <button class="danger" id="btnReset">↺ RESET</button>
+      <button id="btnExport" style="margin-top:10px;border-color:#4ae8c8;color:#4ae8c8;">⬇ EXPORT RUNS JSON</button>
+      <div id="runCount" style="font-size:0.6rem;color:var(--muted);margin-top:6px;text-align:center;">0 runs logged</div>
+      <br><br>
+      <label>Sim Speed <span class="val" id="vSpeed">1x</span></label>
+      <input type="range" id="simSpeed" min="1" max="8" value="2">
+    </div>
+
+    <div class="ctrl-section">
+      <h3>Legend</h3>
+      <div class="legend">
+        <div class="leg-item"><div class="leg-dot" style="background:#d4a832"></div>Neoprene Balloon</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#cccccc"></div>Foil Reflector (ML307)</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#8888ff"></div>Radar Target</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#4a8ae8"></div>Instrument Package</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#aa6633"></div>Rope/Cord</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#ffffff;opacity:0.4"></div>Debris Scatter</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CANVAS -->
+  <div class="canvas-wrap">
+    <canvas id="sim"></canvas>
+
+    <div class="hud">
+      <div>ALT: <span id="hudAlt">—</span> ft</div>
+      <div>PHASE: <span id="hudPhase">IDLE</span></div>
+      <div>WIND: <span id="hudWind">—</span></div>
+      <div>INTACT: <span id="hudIntact">—</span></div>
+      <div>DEBRIS PCS: <span id="hudDebris">0</span></div>
+      <div>FIELD WIDTH: <span id="hudFieldW">—</span></div>
+      <div>FIELD LENGTH: <span id="hudFieldL">—</span></div>
+      <div>T+<span id="hudTime">0</span>s</div>
+    </div>
+
+    <div class="status-bar">
+      <div>NYU FLIGHT 4 · CONSTANT-LEVEL BALLOON TRAIN · <em>ACOUSTIC INTELLIGENCE PROGRAM</em></div>
+      <div>CLICK CANVAS TO INSPECT DEBRIS</div>
+      <div id="statusMsg">READY</div>
+    </div>
+  </div>
+
+  <!-- RIGHT STATS -->
+  <div class="stats-panel">
+    <h3>Mission Data</h3>
+
+    <div class="phase-indicator" id="ph1">① ASCENT</div>
+    <div class="phase-indicator" id="ph2">② CRUISE</div>
+    <div class="phase-indicator" id="ph3">③ FAILURE</div>
+    <div class="phase-indicator" id="ph4">④ SCATTER</div>
+    <div class="phase-indicator" id="ph5">⑤ IMPACT</div>
+
+    <div style="margin-top:12px">
+      <div class="stat-row">Balloons <span id="stBalloons">23</span></div>
+      <div class="stat-row">Foil Targets <span id="stFoil">—</span></div>
+      <div class="stat-row">Instruments <span id="stInst">—</span></div>
+      <div class="stat-row">Rope Length <span id="stRope">—</span></div>
+    </div>
+
+    <div class="debris-list" id="debrisList">
+      <div style="color:var(--accent2);margin-bottom:4px">DEBRIS INVENTORY</div>
+      Simulation not started.
+    </div>
+  </div>
+</div>
+
+<script>
+const canvas = document.getElementById('sim');
+const ctx = canvas.getContext('2d');
+
+// --- Utility ---
+function rnd(a, b) { return a + Math.random() * (b - a); }
+function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+function lerp(a, b, t) { return a + (b - a) * t; }
+
+// --- Param bindings ---
+function bind(id, valId, fmt) {
+  const el = document.getElementById(id);
+  const vel = document.getElementById(valId);
+  const labels = { 0: 'Off', 1: 'Low', 2: 'Med', 3: 'High' };
+  const turbLabels = { 0: 'Off', 1: 'Low', 2: 'Med', 3: 'High' };
+  const cascLabels = { 1: 'Slow', 2: 'Fast', 3: 'Instant' };
+  el.addEventListener('input', () => {
+    if (fmt === 'turb') vel.textContent = turbLabels[el.value];
+    else if (fmt === 'casc') vel.textContent = cascLabels[el.value];
+    else if (fmt === 'speed') vel.textContent = el.value + 'x';
+    else vel.textContent = Number(el.value).toLocaleString();
+  });
+  el.dispatchEvent(new Event('input'));
+}
+
+bind('nBalloons', 'vBalloons');
+bind('initAlt', 'vAlt');
+bind('trainLen', 'vLen');
+bind('windSpeed', 'vWind');
+bind('windDir', 'vWindDir');
+bind('windShear', 'vShear');
+bind('turbulence', 'vTurb', 'turb');
+bind('failAlt', 'vFailAlt');
+bind('cascadeRate', 'vCasc', 'casc');
+bind('simSpeed', 'vSpeed', 'speed');
+
+// --- Simulation State ---
+let sim = null;
+let animId = null;
+let paused = false;
+let lastTime = null;
+let runLog = [];
+let runCounter = 0;
+let currentRunSaved = false;
+
+const PHASES = ['IDLE', 'ASCENT', 'CRUISE', 'FAILURE', 'SCATTER', 'IMPACT'];
+
+function getParams() {
+  return {
+    nBalloons: +document.getElementById('nBalloons').value,
+    initAlt: +document.getElementById('initAlt').value,
+    trainLen: +document.getElementById('trainLen').value,
+    windSpeed: +document.getElementById('windSpeed').value,
+    windDir: +document.getElementById('windDir').value,
+    windShear: +document.getElementById('windShear').value,
+    turbulence: +document.getElementById('turbulence').value,
+    failAlt: +document.getElementById('failAlt').value,
+    cascadeRate: +document.getElementById('cascadeRate').value,
+    simSpeed: +document.getElementById('simSpeed').value,
+  };
+}
+
+// --- World setup ---
+// We simulate in a 2D top-down map view for debris field,
+// and a side-view inset for altitude profile.
+// World units: feet. 1 ft = 1 world unit.
+// Canvas maps to roughly 10x10 miles = 52800 ft square.
+
+const WORLD_SIZE = 79200; // 15 miles in feet
+const MAP_MARGIN = 40;
+
+function worldToCanvas(wx, wy, cw, ch) {
+  return {
+    x: MAP_MARGIN + (wx / WORLD_SIZE) * (cw - MAP_MARGIN * 2),
+    y: MAP_MARGIN + (wy / WORLD_SIZE) * (ch - MAP_MARGIN * 2),
+  };
+}
+
+function canvasToWorld(cx, cy, cw, ch) {
+  return {
+    x: ((cx - MAP_MARGIN) / (cw - MAP_MARGIN * 2)) * WORLD_SIZE,
+    y: ((cy - MAP_MARGIN) / (ch - MAP_MARGIN * 2)) * WORLD_SIZE,
+  };
+}
+
+class Particle {
+  constructor(type, wx, wy, alt, vx, vy, vz) {
+    this.type = type; // 'balloon','foil','radar','instrument','rope','ballast'
+    this.wx = wx; this.wy = wy;
+    this.alt = alt;
+    this.vx = vx; this.vy = vy; this.vz = vz;
+    this.active = true;
+    this.landed = false;
+    this.trail = [];
+    this.mass = this.getMass();
+    this.drag = this.getDrag();
+    this.buoyancy = this.getBuoyancy();
+    this.rotation = rnd(0, Math.PI * 2);
+    this.rotSpeed = rnd(-2, 2);
+    this.age = 0;
+    this.landX = null; this.landY = null; this.landAlt = 0;
+  }
+
+  getMass() {
+    const m = { balloon: 2.2, foil: 0.08, radar: 1.1, instrument: 15, rope: 0.5, ballast: 2 };
+    return (m[this.type] || 1) * rnd(0.8, 1.2);
+  }
+
+  getDrag() {
+    const d = { balloon: 8, foil: 2, radar: 3, instrument: 1, rope: 1.5, ballast: 0.8 };
+    return d[this.type] || 1;
+  }
+
+  getBuoyancy() {
+    const b = { balloon: 0.6, foil: 0.02, radar: 0.05, instrument: 0, rope: 0, ballast: 0 };
+    return b[this.type] || 0;
+  }
+
+  getColor() {
+    const c = {
+      balloon: '#d4a832', foil: '#d0d0d0', radar: '#8888ff',
+      instrument: '#4a8ae8', rope: '#8b6914', ballast: '#888'
+    };
+    return c[this.type] || '#fff';
+  }
+
+  getSize() {
+    const s = { balloon: 6, foil: 3, radar: 4, instrument: 5, rope: 2, ballast: 3 };
+    return s[this.type] || 3;
+  }
+}
+
+class BalloonTrain {
+  constructor(params) {
+    this.p = params;
+    this.phase = 0; // 0=idle,1=ascent,2=cruise,3=failure,4=scatter,5=impact
+    this.time = 0;
+
+    // Train starts at center-ish of world
+    this.wx = WORLD_SIZE * 0.3;
+    this.wy = WORLD_SIZE * 0.5;
+    this.alt = 3000; // launch altitude (Roswell ~3400ft ASL)
+
+    this.windRad = (params.windDir * Math.PI) / 180;
+    this.windVx = Math.cos(this.windRad) * params.windSpeed * 1.6878; // kt to ft/s
+    this.windVy = Math.sin(this.windRad) * params.windSpeed * 1.6878;
+
+    this.particles = [];
+    this.debrisParticles = [];
+
+    // Train members
+    this.nBalloons = params.nBalloons;
+    this.nFoil = Math.floor(params.nBalloons * 0.8);
+    this.nRadar = Math.floor(params.nBalloons * 0.3);
+    this.nInstr = 3;
+
+    this.failureBalloons = [...Array(this.nBalloons).keys()];
+    this.intactBalloons = this.nBalloons;
+
+    this.debrisLanded = 0;
+    this.minX = Infinity; this.maxX = -Infinity;
+    this.minY = Infinity; this.maxY = -Infinity;
+
+    // Ascent rate ~1000fpm for neoprene at this altitude
+    this.ascentRate = 900 + rnd(-100, 100);
+    this.cruiseAlt = params.initAlt;
+    this.phase = 1;
+
+    document.getElementById('stBalloons').textContent = this.nBalloons;
+    document.getElementById('stFoil').textContent = this.nFoil;
+    document.getElementById('stInst').textContent = this.nInstr;
+    document.getElementById('stRope').textContent = Math.round(params.trainLen * 1.4) + ' ft';
+
+    document.getElementById('debrisList').innerHTML =
+      `<div style="color:var(--accent2);margin-bottom:4px">DEBRIS INVENTORY</div>
+       Balloons: ${this.nBalloons}<br>
+       Foil reflectors: ${this.nFoil}<br>
+       Radar targets: ${this.nRadar}<br>
+       Instruments: ${this.nInstr}<br>
+       Rope segments: ~${Math.round(params.trainLen / 20)}<br>
+       Ballast bags: ${Math.ceil(this.nBalloons / 4)}<br>
+       <br><span style="color:var(--muted)">Awaiting cascade...</span>`;
+  }
+
+  spawnDebris(wx, wy, alt) {
+    const p = this.p;
+    const cascSpeeds = [80, 200, 500];
+    const speedMult = cascSpeeds[p.cascadeRate - 1];
+
+    // Wind at this altitude with shear
+    const altKft = alt / 1000;
+    const shear = p.windShear * altKft;
+    const totalWind = (p.windSpeed + shear) * 1.6878;
+    const wvx = Math.cos(this.windRad) * totalWind;
+    const wvy = Math.sin(this.windRad) * totalWind;
+    const turb = p.turbulence * 10;
+
+    const types = ['balloon', 'foil', 'radar', 'instrument', 'rope', 'ballast'];
+    const counts = [
+      Math.ceil(this.nBalloons / 3),
+      Math.ceil(this.nFoil / 3),
+      Math.ceil(this.nRadar / 3),
+      1,
+      Math.floor(p.trainLen / 60),
+      1
+    ];
+
+    for (let t = 0; t < types.length; t++) {
+      for (let i = 0; i < counts[t]; i++) {
+        const sp = rnd(0.1, 1) * speedMult;
+        const ang = rnd(0, Math.PI * 2);
+        const part = new Particle(
+          types[t],
+          wx + rnd(-500, 500),
+          wy + rnd(-500, 500),
+          alt + rnd(-500, 500),
+          wvx + Math.cos(ang) * sp * 0.3 + rnd(-turb, turb),
+          wvy + Math.sin(ang) * sp * 0.3 + rnd(-turb, turb),
+          rnd(-20, 5) // mostly falling
+        );
+        this.debrisParticles.push(part);
+      }
+    }
+  }
+
+  update(dt) {
+    const p = this.p;
+    this.time += dt;
+
+    const wvx = Math.cos(this.windRad) * p.windSpeed * 1.6878;
+    const wvy = Math.sin(this.windRad) * p.windSpeed * 1.6878;
+    const turb = p.turbulence * rnd(-3, 3);
+
+    if (this.phase === 1) {
+      // ASCENT — fail when reaching failAlt
+      this.alt += this.ascentRate / 60 * dt;
+      this.wx += wvx * dt * 0.3;
+      this.wy += wvy * dt * 0.3;
+      if (this.alt >= p.failAlt) {
+        this.alt = p.failAlt;
+        this.phase = 3;
+      }
+    } else if (this.phase === 2) {
+      // unused
+      this.phase = 3;
+    } else if (this.phase === 3) {
+      // FAILURE - balloons bursting cascade
+      this.wx += (wvx + turb) * dt;
+      this.wy += (wvy + turb) * dt;
+
+      const cascRates = [0.5, 2, 10];
+      const rate = cascRates[p.cascadeRate - 1] * dt;
+      const toBurst = Math.ceil(rate);
+
+      if (this.intactBalloons > 0) {
+        const bursting = Math.min(toBurst, this.intactBalloons);
+        this.intactBalloons -= bursting;
+        // As balloons burst, train loses buoyancy and descends
+        const liftLoss = bursting / this.nBalloons;
+        this.alt -= liftLoss * 800 * dt;
+        this.spawnDebris(this.wx, this.wy, this.alt);
+
+        if (this.intactBalloons <= 0) {
+          this.phase = 4;
+          // Spawn remaining debris
+          for (let i = 0; i < 20; i++) this.spawnDebris(this.wx, this.wy, this.alt);
+        }
+      }
+    } else if (this.phase === 4) {
+      this.phase = 5;
+    }
+
+    // Update debris particles
+    for (const dp of this.debrisParticles) {
+      if (dp.landed) continue;
+      dp.age += dt;
+
+      // Gravity + buoyancy + drag
+      const airDensityFactor = Math.exp(-dp.alt / 100000);
+      const effectiveDrag = dp.drag * airDensityFactor;
+
+      dp.vz += (-32.2 + dp.buoyancy * 20 * airDensityFactor) * dt;
+      dp.vx = lerp(dp.vx, wvx + turb, effectiveDrag * 0.01 * dt);
+      dp.vy = lerp(dp.vy, wvy + turb, effectiveDrag * 0.01 * dt);
+
+      // Terminal velocity
+      const maxVz = -100 - dp.mass * 2;
+      dp.vz = Math.max(maxVz, dp.vz);
+
+      dp.wx += dp.vx * dt;
+      dp.wy += dp.vy * dt;
+      dp.alt += dp.vz * dt;
+      dp.rotation += dp.rotSpeed * dt;
+
+      // Trail
+      dp.trail.push({ x: dp.wx, y: dp.wy, a: dp.age });
+      if (dp.trail.length > 30) dp.trail.shift();
+
+      // Ground impact (3500ft ASL = Foster Ranch approx)
+      if (dp.alt <= 3500) {
+        dp.landed = true;
+        dp.landX = dp.wx;
+        dp.landY = dp.wy;
+        this.debrisLanded++;
+
+        // Update field bounds
+        this.minX = Math.min(this.minX, dp.wx);
+        this.maxX = Math.max(this.maxX, dp.wx);
+        this.minY = Math.min(this.minY, dp.wy);
+        this.maxY = Math.max(this.maxY, dp.wy);
+      }
+
+      // Out of bounds
+      if (dp.wx < 0 || dp.wx > WORLD_SIZE || dp.wy < 0 || dp.wy > WORLD_SIZE) {
+        dp.landed = true;
+      }
+    }
+
+    // Update phase indicators
+    ['ph1','ph2','ph3','ph4','ph5'].forEach((id, i) => {
+      const el = document.getElementById(id);
+      el.className = 'phase-indicator' + (this.phase === i + 1 ? ' active' : '');
+    });
+  }
+}
+
+function resize() {
+  canvas.width = canvas.offsetWidth;
+  canvas.height = canvas.offsetHeight;
+}
+
+function drawGrid(cw, ch) {
+  ctx.strokeStyle = 'rgba(30,40,48,0.8)';
+  ctx.lineWidth = 0.5;
+  const steps = 10;
+  for (let i = 0; i <= steps; i++) {
+    const x = MAP_MARGIN + (i / steps) * (cw - MAP_MARGIN * 2);
+    const y = MAP_MARGIN + (i / steps) * (ch - MAP_MARGIN * 2);
+    ctx.beginPath(); ctx.moveTo(x, MAP_MARGIN); ctx.lineTo(x, ch - MAP_MARGIN); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(MAP_MARGIN, y); ctx.lineTo(cw - MAP_MARGIN, y); ctx.stroke();
+  }
+  // Scale bar
+  const mileInPx = (5280 / WORLD_SIZE) * (cw - MAP_MARGIN * 2);
+  ctx.strokeStyle = 'rgba(200,212,220,0.5)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(MAP_MARGIN, ch - MAP_MARGIN + 18);
+  ctx.lineTo(MAP_MARGIN + mileInPx, ch - MAP_MARGIN + 18);
+  ctx.stroke();
+  ctx.fillStyle = '#5a6a74';
+  ctx.font = '10px Share Tech Mono';
+  ctx.fillText('1 mi', MAP_MARGIN + mileInPx / 2 - 10, ch - MAP_MARGIN + 15);
+}
+
+function drawAltitudeBar(s, cw, ch) {
+  // Side bar on left showing altitude
+  const bw = 28, bx = 6, by = MAP_MARGIN, bh = ch - MAP_MARGIN * 2;
+  const maxAlt = 80000;
+
+  ctx.fillStyle = 'rgba(17,20,24,0.9)';
+  ctx.fillRect(bx, by, bw, bh);
+  ctx.strokeStyle = '#1e2830';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(bx, by, bw, bh);
+
+  // Altitude bands
+  const bands = [
+    { alt: 70000, label: '70K', color: 'rgba(100,100,200,0.15)' },
+    { alt: 60000, label: '60K', color: 'rgba(80,80,180,0.1)' },
+    { alt: 40000, label: '40K', color: 'rgba(60,80,160,0.1)' },
+    { alt: 20000, label: '20K', color: 'rgba(40,60,140,0.1)' },
+    { alt: 0, label: 'GND', color: 'rgba(80,60,40,0.2)' },
+  ];
+
+  bands.forEach((b, i) => {
+    const y1 = by + bh - (b.alt / maxAlt) * bh;
+    const y2 = i + 1 < bands.length ? by + bh - (bands[i + 1].alt / maxAlt) * bh : by + bh;
+    ctx.fillStyle = b.color;
+    ctx.fillRect(bx, y1, bw, y2 - y1);
+    ctx.fillStyle = '#3a4a54';
+    ctx.font = '7px Share Tech Mono';
+    ctx.fillText(b.label, bx + 2, y1 + 8);
+  });
+
+  if (!s) return;
+
+  // Train altitude marker
+  const ay = by + bh - (s.alt / maxAlt) * bh;
+  ctx.fillStyle = '#e8c84a';
+  ctx.beginPath();
+  ctx.arc(bx + bw / 2, clamp(ay, by, by + bh), 4, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Failure altitude line
+  const fy = by + bh - (s.p.failAlt / maxAlt) * bh;
+  ctx.strokeStyle = 'rgba(232,74,74,0.5)';
+  ctx.setLineDash([3, 3]);
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(bx, fy); ctx.lineTo(bx + bw, fy); ctx.stroke();
+  ctx.setLineDash([]);
+}
+
+function draw() {
+  const cw = canvas.width, ch = canvas.height;
+  ctx.clearRect(0, 0, cw, ch);
+
+  // Background
+  ctx.fillStyle = '#0a0c0f';
+  ctx.fillRect(0, 0, cw, ch);
+
+  // Terrain texture hint
+  ctx.fillStyle = 'rgba(20, 16, 10, 0.4)';
+  ctx.fillRect(MAP_MARGIN, MAP_MARGIN, cw - MAP_MARGIN * 2, ch - MAP_MARGIN * 2);
+
+  drawGrid(cw, ch);
+
+  // Compass
+  ctx.fillStyle = '#1e2830';
+  ctx.font = '11px Share Tech Mono';
+  ctx.fillStyle = '#5a6a74';
+  ctx.fillText('N', cw / 2 - 4, MAP_MARGIN - 8);
+  ctx.fillText('S', cw / 2 - 4, ch - MAP_MARGIN + 14);
+  ctx.fillText('W', MAP_MARGIN - 20, ch / 2 + 4);
+  ctx.fillText('E', cw - MAP_MARGIN + 6, ch / 2 + 4);
+
+  if (!sim) {
+    ctx.fillStyle = '#2a3040';
+    ctx.font = '14px Share Tech Mono';
+    ctx.fillText('[ PRESS LAUNCH MISSION TO BEGIN ]', cw / 2 - 160, ch / 2);
+    ctx.fillStyle = '#1e2830';
+    ctx.font = '11px Share Tech Mono';
+    ctx.fillText('Foster Ranch, Lincoln County, New Mexico · 33.9°N 105.3°W', cw / 2 - 190, ch / 2 + 22);
+    drawAltitudeBar(null, cw, ch);
+    return;
+  }
+
+  drawAltitudeBar(sim, cw, ch);
+
+  // Wind arrow
+  const wp = worldToCanvas(WORLD_SIZE * 0.88, WORLD_SIZE * 0.12, cw, ch);
+  const wrad = (sim.p.windDir * Math.PI) / 180;
+  const wlen = 25;
+  ctx.strokeStyle = '#4ae8c8';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(wp.x, wp.y);
+  ctx.lineTo(wp.x + Math.cos(wrad) * wlen, wp.y + Math.sin(wrad) * wlen);
+  ctx.stroke();
+  ctx.fillStyle = '#4ae8c8';
+  ctx.font = '9px Share Tech Mono';
+  ctx.fillText(`${sim.p.windSpeed}kt`, wp.x - 12, wp.y - 6);
+
+  // Draw debris trails
+  for (const dp of sim.debrisParticles) {
+    if (dp.trail.length < 2 || dp.landed) continue;
+    ctx.beginPath();
+    dp.trail.forEach((pt, i) => {
+      const cp = worldToCanvas(pt.x, pt.y, cw, ch);
+      if (i === 0) ctx.moveTo(cp.x, cp.y);
+      else ctx.lineTo(cp.x, cp.y);
+    });
+    ctx.strokeStyle = dp.getColor() + '33';
+    ctx.lineWidth = 0.5;
+    ctx.stroke();
+  }
+
+  // Draw landed debris
+  let landedCount = 0;
+  for (const dp of sim.debrisParticles) {
+    if (!dp.landed || !dp.landX) continue;
+    landedCount++;
+    const cp = worldToCanvas(dp.landX, dp.landY, cw, ch);
+    ctx.save();
+    ctx.translate(cp.x, cp.y);
+    ctx.rotate(dp.rotation);
+    const sz = dp.getSize() * 0.7;
+    ctx.fillStyle = dp.getColor() + 'cc';
+    if (dp.type === 'foil' || dp.type === 'rope') {
+      ctx.fillRect(-sz, -sz / 3, sz * 2, sz / 3);
+    } else {
+      ctx.beginPath();
+      ctx.arc(0, 0, sz, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  // Draw active particles
+  for (const dp of sim.debrisParticles) {
+    if (dp.landed) continue;
+    const cp = worldToCanvas(dp.wx, dp.wy, cw, ch);
+    const altFade = clamp(dp.alt / 60000, 0, 1);
+    const sz = dp.getSize();
+
+    ctx.save();
+    ctx.globalAlpha = 0.5 + altFade * 0.5;
+    ctx.translate(cp.x, cp.y);
+    ctx.rotate(dp.rotation);
+    ctx.fillStyle = dp.getColor();
+    if (dp.type === 'foil') {
+      ctx.fillRect(-sz, -sz / 3, sz * 2, sz / 3);
+    } else {
+      ctx.beginPath();
+      ctx.arc(0, 0, sz, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  // Draw balloon train (intact portions)
+  if (sim.phase <= 3) {
+    const tp = worldToCanvas(sim.wx, sim.wy, cw, ch);
+    const intactFrac = sim.intactBalloons / sim.nBalloons;
+    const trainLenPx = (sim.p.trainLen / WORLD_SIZE) * (cw - MAP_MARGIN * 2) * intactFrac;
+    const trailDir = Math.atan2(sim.windVy, sim.windVx) + Math.PI;
+
+    // Rope
+    ctx.strokeStyle = '#8b6914';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(tp.x, tp.y);
+    ctx.lineTo(tp.x + Math.cos(trailDir) * trainLenPx, tp.y + Math.sin(trailDir) * trainLenPx);
+    ctx.stroke();
+
+    // Balloons along rope
+    for (let i = 0; i < sim.intactBalloons; i++) {
+      const frac = i / Math.max(sim.intactBalloons - 1, 1);
+      const bx2 = tp.x + Math.cos(trailDir) * trainLenPx * frac;
+      const by2 = tp.y + Math.sin(trailDir) * trainLenPx * frac;
+
+      // Glow
+      const grd = ctx.createRadialGradient(bx2, by2 - 5, 0, bx2, by2 - 5, 10);
+      grd.addColorStop(0, 'rgba(212,168,50,0.6)');
+      grd.addColorStop(1, 'rgba(212,168,50,0)');
+      ctx.fillStyle = grd;
+      ctx.beginPath();
+      ctx.arc(bx2, by2 - 5, 10, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = '#d4a832';
+      ctx.beginPath();
+      ctx.arc(bx2, by2 - 5, 5, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // Main body glow at train center
+    const glowGrd = ctx.createRadialGradient(tp.x, tp.y, 0, tp.x, tp.y, 20);
+    glowGrd.addColorStop(0, 'rgba(232,200,74,0.3)');
+    glowGrd.addColorStop(1, 'rgba(232,200,74,0)');
+    ctx.fillStyle = glowGrd;
+    ctx.beginPath();
+    ctx.arc(tp.x, tp.y, 20, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // Debris field bounding box
+  if (sim.debrisLanded > 5 && sim.minX !== Infinity) {
+    const mn = worldToCanvas(sim.minX, sim.minY, cw, ch);
+    const mx = worldToCanvas(sim.maxX, sim.maxY, cw, ch);
+    ctx.strokeStyle = 'rgba(232,200,74,0.25)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([5, 5]);
+    ctx.strokeRect(mn.x, mn.y, mx.x - mn.x, mx.y - mn.y);
+    ctx.setLineDash([]);
+
+    // Labels
+    const fw = Math.round((sim.maxX - sim.minX) / 5280 * 10) / 10;
+    const fl = Math.round((sim.maxY - sim.minY) / 5280 * 10) / 10;
+    ctx.fillStyle = 'rgba(232,200,74,0.6)';
+    ctx.font = '9px Share Tech Mono';
+    ctx.fillText(`${fw} mi`, (mn.x + mx.x) / 2 - 15, mn.y - 4);
+    ctx.fillText(`${fl} mi`, mx.x + 4, (mn.y + mx.y) / 2);
+  }
+
+  // HUD Update
+  const phaseNames = ['IDLE', 'ASCENT', 'CRUISE', 'SYSTEM FAILURE', 'CASCADE', 'IMPACT'];
+  document.getElementById('hudAlt').textContent = Math.round(sim.alt).toLocaleString();
+  document.getElementById('hudPhase').textContent = phaseNames[sim.phase] || '—';
+  document.getElementById('hudWind').textContent = `${sim.p.windSpeed}kt @ ${sim.p.windDir}°`;
+  document.getElementById('hudIntact').textContent = sim.intactBalloons + '/' + sim.nBalloons;
+  document.getElementById('hudDebris').textContent = sim.debrisParticles.length;
+  document.getElementById('hudTime').textContent = Math.round(sim.time);
+
+  if (sim.minX !== Infinity) {
+    const fw = (((sim.maxX - sim.minX) / 5280) * 10) / 10;
+    const fl = (((sim.maxY - sim.minY) / 5280) * 10) / 10;
+    document.getElementById('hudFieldW').textContent = fw.toFixed(1) + ' mi';
+    document.getElementById('hudFieldL').textContent = fl.toFixed(1) + ' mi';
+  } else {
+    document.getElementById('hudFieldW').textContent = '—';
+    document.getElementById('hudFieldL').textContent = '—';
+  }
+
+  if (sim.phase === 5 || (sim.phase >= 3 && sim.intactBalloons === 0)) {
+    const allLanded = sim.debrisParticles.every(d => d.landed);
+    if (allLanded && sim.debrisParticles.length > 0) {
+      // Summary
+      ctx.fillStyle = 'rgba(10,12,15,0.7)';
+      const bx2 = cw / 2 - 180, by2 = ch / 2 - 60;
+      ctx.fillRect(bx2, by2, 360, 120);
+      ctx.strokeStyle = '#e8c84a';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(bx2, by2, 360, 120);
+      ctx.fillStyle = '#e8c84a';
+      ctx.font = '12px Oswald';
+      ctx.fillText('DEBRIS FIELD COMPLETE', bx2 + 90, by2 + 22);
+      ctx.fillStyle = '#c8d4dc';
+      ctx.font = '10px Share Tech Mono';
+      const fw = (((sim.maxX - sim.minX) / 5280) * 10) / 10;
+      const fl = (((sim.maxY - sim.minY) / 5280) * 10) / 10;
+      ctx.fillText(`Field Width:   ${fw.toFixed(2)} miles`, bx2 + 20, by2 + 45);
+      ctx.fillText(`Field Length:  ${fl.toFixed(2)} miles`, bx2 + 20, by2 + 62);
+      ctx.fillText(`Total Pieces:  ${sim.debrisLanded}`, bx2 + 20, by2 + 79);
+      ctx.fillText(`Consistent with Foster Ranch 1947 field:`, bx2 + 20, by2 + 96);
+      const match = fw < 5 && fl < 12 ? '✓ YES (~3/4 mi × 2.5 mi reported)' : '✗ Outside historical range';
+      ctx.fillStyle = fw < 5 && fl < 12 ? '#4ae8c8' : '#e84a4a';
+      ctx.fillText(match, bx2 + 20, by2 + 113);
+      saveRun(sim);
+      document.getElementById('statusMsg').textContent = 'SIMULATION COMPLETE — Run #' + runCounter + ' saved';
+    }
+  }
+}
+
+
+function saveRun(s) {
+  if (currentRunSaved) return;
+  currentRunSaved = true;
+  runCounter++;
+
+  const fieldWidthFt = s.maxX - s.minX;
+  const fieldLengthFt = s.maxY - s.minY;
+
+  const debrisByType = {};
+  for (const dp of s.debrisParticles) {
+    if (!dp.landed) continue;
+    debrisByType[dp.type] = (debrisByType[dp.type] || 0) + 1;
+  }
+
+  const landedPieces = s.debrisParticles
+    .filter(d => d.landed && d.landX !== null)
+    .map(d => ({
+      type: d.type,
+      landX_ft: Math.round(d.landX),
+      landY_ft: Math.round(d.landY),
+      distFromOrigin_ft: Math.round(Math.hypot(d.landX - s.wx, d.landY - s.wy))
+    }));
+
+  const record = {
+    runId: runCounter,
+    timestamp: new Date().toISOString(),
+    params: {
+      nBalloons: s.p.nBalloons,
+      initAlt_ft: s.p.initAlt,
+      trainLength_ft: s.p.trainLen,
+      windSpeed_kt: s.p.windSpeed,
+      windDir_deg: s.p.windDir,
+      windShear_kt_per_kft: s.p.windShear,
+      turbulence: s.p.turbulence,
+      failureAlt_ft: s.p.failAlt,
+      cascadeRate: s.p.cascadeRate,
+    },
+    results: {
+      failureAlt_ft: Math.round(s.alt),
+      simulationTime_s: Math.round(s.time),
+      totalDebrisPieces: s.debrisLanded,
+      debrisByType,
+      fieldWidth_ft: Math.round(fieldWidthFt),
+      fieldLength_ft: Math.round(fieldLengthFt),
+      fieldWidth_mi: parseFloat((fieldWidthFt / 5280).toFixed(3)),
+      fieldLength_mi: parseFloat((fieldLengthFt / 5280).toFixed(3)),
+      fieldArea_sqmi: parseFloat(((fieldWidthFt / 5280) * (fieldLengthFt / 5280)).toFixed(4)),
+      historicalMatch: fieldWidthFt / 5280 < 5 && fieldLengthFt / 5280 < 12,
+    },
+    debrisPieces: landedPieces,
+  };
+
+  runLog.push(record);
+  document.getElementById('runCount').textContent = runLog.length + ' run' + (runLog.length !== 1 ? 's' : '') + ' logged';
+}
+
+function loop(ts) {
+  if (!paused && sim) {
+    if (!lastTime) lastTime = ts;
+    const raw = (ts - lastTime) / 1000;
+    lastTime = ts;
+    const dt = Math.min(raw, 0.1) * sim.p.simSpeed;
+    sim.update(dt);
+  } else if (!sim) {
+    lastTime = null;
+  } else {
+    lastTime = ts;
+  }
+  draw();
+  animId = requestAnimationFrame(loop);
+}
+
+document.getElementById('btnRun').addEventListener('click', () => {
+  const p = getParams();
+  sim = new BalloonTrain(p);
+  currentRunSaved = false;
+  paused = false;
+  document.getElementById('statusMsg').textContent = 'SIMULATION RUNNING';
+  if (!animId) animId = requestAnimationFrame(loop);
+});
+
+document.getElementById('btnPause').addEventListener('click', () => {
+  paused = !paused;
+  document.getElementById('btnPause').textContent = paused ? '▶ RESUME' : '⏸ PAUSE';
+  document.getElementById('statusMsg').textContent = paused ? 'PAUSED' : 'RUNNING';
+});
+
+document.getElementById('btnReset').addEventListener('click', () => {
+  sim = null;
+  paused = false;
+  document.getElementById('statusMsg').textContent = 'READY';
+  document.getElementById('btnPause').textContent = '⏸ PAUSE';
+  document.getElementById('debrisList').innerHTML = '<div style="color:var(--accent2);margin-bottom:4px">DEBRIS INVENTORY</div>Simulation not started.';
+  ['hudAlt','hudPhase','hudWind','hudIntact','hudFieldW','hudFieldL'].forEach(id => {
+    document.getElementById(id).textContent = '—';
+  });
+  document.getElementById('hudDebris').textContent = '0';
+  document.getElementById('hudTime').textContent = '0';
+  ['ph1','ph2','ph3','ph4','ph5'].forEach(id => {
+    document.getElementById(id).className = 'phase-indicator';
+  });
+});
+
+// Canvas click — inspect debris
+canvas.addEventListener('click', (e) => {
+  if (!sim) return;
+  const rect = canvas.getBoundingClientRect();
+  const cx = e.clientX - rect.left;
+  const cy = e.clientY - rect.top;
+  const wp = canvasToWorld(cx, cy, canvas.width, canvas.height);
+
+  let closest = null, closestD = Infinity;
+  for (const dp of sim.debrisParticles) {
+    const px = dp.landed ? dp.landX : dp.wx;
+    const py = dp.landed ? dp.landY : dp.wy;
+    const d = Math.hypot(px - wp.x, py - wp.y);
+    if (d < closestD) { closestD = d; closest = dp; }
+  }
+
+  if (closest && closestD < 3000) {
+    const typeNames = {
+      balloon: 'Neoprene Balloon (ML-126)',
+      foil: 'Foil Corner Reflector',
+      radar: 'ML-307B Radar Target',
+      instrument: 'Instrument Package',
+      rope: 'Nylon Rope Segment',
+      ballast: 'Ballast Bag'
+    };
+    document.getElementById('statusMsg').textContent =
+      `SELECTED: ${typeNames[closest.type] || closest.type} | ` +
+      `ALT: ${Math.round(closest.alt).toLocaleString()}ft | ` +
+      `STATUS: ${closest.landed ? 'LANDED' : 'FALLING'}`;
+  }
+});
+
+
+document.getElementById('btnExport').addEventListener('click', () => {
+  if (runLog.length === 0) {
+    document.getElementById('statusMsg').textContent = 'NO RUNS LOGGED YET — complete at least one simulation';
+    return;
+  }
+  const payload = {
+    exportedAt: new Date().toISOString(),
+    totalRuns: runLog.length,
+    runs: runLog,
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'mogul_debris_runs.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  document.getElementById('statusMsg').textContent = `EXPORTED ${runLog.length} run(s) → mogul_debris_runs.json`;
+});
+
+window.addEventListener('resize', resize);
+resize();
+animId = requestAnimationFrame(loop);
+</script>
+</body>
+</html>
