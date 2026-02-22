@@ -16,11 +16,6 @@
     --danger: #e84a4a;
     --text: #c8d4dc;
     --muted: #5a6a74;
-    --balloon: #d4a832;
-    --reflector: #8888ff;
-    --radar: #4a8ae8;
-    --foil: #cccccc;
-    --rope: #8b6914;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -72,29 +67,21 @@
 
   @keyframes blink { 50% { opacity: 0.4; } }
 
-  .main {
-    display: flex;
-    flex: 1;
-    overflow: hidden;
-  }
+  .main { display: flex; flex: 1; overflow: hidden; }
 
-  /* LEFT PANEL */
   .controls {
-    width: 230px;
+    width: 240px;
     background: var(--panel);
     border-right: 1px solid var(--border);
     padding: 14px;
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 10px;
     overflow-y: auto;
     flex-shrink: 0;
   }
 
-  .ctrl-section {
-    border: 1px solid var(--border);
-    padding: 10px;
-  }
+  .ctrl-section { border: 1px solid var(--border); padding: 10px; }
 
   .ctrl-section h3 {
     font-family: 'Oswald', sans-serif;
@@ -106,23 +93,27 @@
   }
 
   label {
-    font-size: 0.65rem;
+    font-size: 0.62rem;
     color: var(--muted);
     display: block;
     margin-bottom: 3px;
     letter-spacing: 1px;
   }
 
-  input[type=range] {
+  input[type=range] { width: 100%; accent-color: var(--accent); margin-bottom: 6px; }
+
+  select {
     width: 100%;
-    accent-color: var(--accent);
+    background: #0a0c0f;
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.62rem;
+    padding: 4px;
     margin-bottom: 8px;
   }
 
-  .val {
-    color: var(--accent2);
-    float: right;
-  }
+  .val { color: var(--accent2); float: right; }
 
   button {
     width: 100%;
@@ -131,7 +122,7 @@
     border: 1px solid var(--accent);
     color: var(--accent);
     font-family: 'Share Tech Mono', monospace;
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     letter-spacing: 2px;
     cursor: pointer;
     text-transform: uppercase;
@@ -142,8 +133,9 @@
   button:hover { background: var(--accent); color: #000; }
   button.danger { border-color: var(--danger); color: var(--danger); }
   button.danger:hover { background: var(--danger); color: #fff; }
+  button.cyan { border-color: var(--accent2); color: var(--accent2); }
+  button.cyan:hover { background: var(--accent2); color: #000; }
 
-  /* CANVAS AREA */
   .canvas-wrap {
     flex: 1;
     display: flex;
@@ -152,30 +144,39 @@
     overflow: hidden;
   }
 
-  canvas {
-    flex: 1;
-    display: block;
-    cursor: crosshair;
-  }
+  canvas { flex: 1; display: block; cursor: crosshair; }
 
   .hud {
     position: absolute;
     top: 10px; right: 10px;
-    background: rgba(10,12,15,0.85);
+    background: rgba(10,12,15,0.88);
     border: 1px solid var(--border);
     padding: 10px 14px;
-    font-size: 0.62rem;
-    line-height: 1.9;
-    min-width: 200px;
+    font-size: 0.6rem;
+    line-height: 2.0;
+    min-width: 215px;
   }
 
   .hud span { color: var(--accent2); }
+
+  /* Wind profile minimap */
+  .wind-inset {
+    position: absolute;
+    bottom: 36px; right: 10px;
+    width: 130px;
+    background: rgba(10,12,15,0.88);
+    border: 1px solid var(--border);
+    padding: 6px;
+  }
+
+  .wind-inset canvas { width: 100%; height: 160px; display: block; }
+  .wind-inset-title { font-size: 0.55rem; color: var(--muted); letter-spacing: 1px; margin-bottom: 4px; }
 
   .status-bar {
     background: var(--panel);
     border-top: 1px solid var(--border);
     padding: 5px 14px;
-    font-size: 0.62rem;
+    font-size: 0.6rem;
     color: var(--muted);
     display: flex;
     gap: 20px;
@@ -184,14 +185,8 @@
 
   .status-bar em { color: var(--accent); font-style: normal; }
 
-  /* LEGEND */
-  .legend { display: flex; flex-direction: column; gap: 4px; }
-  .leg-item { display: flex; align-items: center; gap: 6px; font-size: 0.6rem; }
-  .leg-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-
-  /* RIGHT PANEL - stats */
   .stats-panel {
-    width: 200px;
+    width: 205px;
     background: var(--panel);
     border-left: 1px solid var(--border);
     padding: 14px;
@@ -211,25 +206,20 @@
   .stat-row {
     display: flex;
     justify-content: space-between;
-    font-size: 0.62rem;
+    font-size: 0.6rem;
     padding: 4px 0;
     border-bottom: 1px solid var(--border);
     color: var(--muted);
   }
   .stat-row span { color: var(--text); }
 
-  .debris-list {
-    margin-top: 10px;
-    font-size: 0.58rem;
-    color: var(--muted);
-    line-height: 1.8;
-  }
+  .debris-list { margin-top: 10px; font-size: 0.57rem; color: var(--muted); line-height: 1.9; }
 
   .phase-indicator {
-    padding: 6px;
+    padding: 5px;
     border: 1px solid var(--border);
-    margin-bottom: 6px;
-    font-size: 0.62rem;
+    margin-bottom: 5px;
+    font-size: 0.6rem;
     text-align: center;
   }
 
@@ -238,6 +228,19 @@
     color: var(--accent);
     background: rgba(232,200,74,0.05);
   }
+
+  .legend { display: flex; flex-direction: column; gap: 4px; }
+  .leg-item { display: flex; align-items: center; gap: 6px; font-size: 0.58rem; }
+  .leg-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+
+  .sounding-badge {
+    font-size: 0.55rem;
+    color: var(--accent2);
+    border: 1px solid var(--accent2);
+    padding: 2px 5px;
+    margin-top: 4px;
+    display: inline-block;
+  }
 </style>
 </head>
 <body>
@@ -245,7 +248,7 @@
 <header>
   <div class="title-block">
     <h1>Project Mogul — Flight No. 4 Debris Simulation</h1>
-    <p>NYU / USAF Constant Level Balloon Train · Foster Ranch, NM · July 1947</p>
+    <p>NYU / USAF Constant Level Balloon Train · Foster Ranch, NM · 4D Trajectory Solver + ISA Atmosphere</p>
   </div>
   <div class="classification">DECLASSIFIED 1994</div>
 </header>
@@ -253,37 +256,44 @@
 <div class="main">
   <!-- LEFT CONTROLS -->
   <div class="controls">
+
     <div class="ctrl-section">
       <h3>Balloon Train</h3>
       <label>Balloons in train <span class="val" id="vBalloons">23</span></label>
       <input type="range" id="nBalloons" min="5" max="30" value="23">
 
-      <label>Initial Altitude (ft) <span class="val" id="vAlt">60000</span></label>
-      <input type="range" id="initAlt" min="30000" max="100000" value="60000" step="1000">
-
       <label>Train Length (ft) <span class="val" id="vLen">600</span></label>
       <input type="range" id="trainLen" min="100" max="1200" value="600" step="50">
+
+      <label>Balloon Vol. (m³) <span class="val" id="vVol">1.4</span></label>
+      <input type="range" id="balloonVol" min="0.5" max="4.0" value="1.4" step="0.1">
     </div>
 
     <div class="ctrl-section">
-      <h3>Atmosphere</h3>
-      <label>Wind Speed (kt) <span class="val" id="vWind">28</span></label>
-      <input type="range" id="windSpeed" min="5" max="80" value="28">
+      <h3>Radiosonde Profile</h3>
+      <label>Wind Sounding Date</label>
+      <select id="soundingDate">
+        <option value="jul8_1947">Jul 8 1947 — 03Z (Historical)</option>
+        <option value="jul2_1947">Jul 2 1947 — 12Z (Estimated)</option>
+        <option value="calm">Calm / No Wind</option>
+        <option value="strong_jet">Strong Jet Stream (+100kt @ 35kft)</option>
+      </select>
+      <div class="sounding-badge" id="soundingBadge">NOAA RECONSTRUCTED</div>
 
-      <label>Wind Direction (°) <span class="val" id="vWindDir">225</span></label>
-      <input type="range" id="windDir" min="0" max="359" value="225">
-
-      <label>Wind Shear (kt/kft) <span class="val" id="vShear">3</span></label>
-      <input type="range" id="windShear" min="0" max="10" value="3">
-
-      <label>Turbulence <span class="val" id="vTurb">Med</span></label>
+      <label style="margin-top:6px">Turbulence Intensity <span class="val" id="vTurb">Low</span></label>
       <input type="range" id="turbulence" min="0" max="3" value="1" step="1">
     </div>
 
     <div class="ctrl-section">
       <h3>Failure Mode</h3>
-      <label>Failure Alt (ft) <span class="val" id="vFailAlt">40000</span></label>
+      <label>Failure Altitude (ft MSL) <span class="val" id="vFailAlt">40,000</span></label>
       <input type="range" id="failAlt" min="5000" max="80000" value="40000" step="1000">
+
+      <label>Burst Trigger <span class="val" id="vBurstMode">Pressure</span></label>
+      <input type="range" id="burstMode" min="1" max="2" value="1" step="1">
+      <div style="font-size:0.55rem;color:var(--muted);margin-top:-4px;margin-bottom:6px" id="burstDesc">
+        Differential pressure threshold (ISA-based)
+      </div>
 
       <label>Cascade Rate <span class="val" id="vCasc">Fast</span></label>
       <input type="range" id="cascadeRate" min="1" max="3" value="2" step="1">
@@ -294,22 +304,22 @@
       <button id="btnRun">▶ LAUNCH MISSION</button>
       <button id="btnPause">⏸ PAUSE</button>
       <button class="danger" id="btnReset">↺ RESET</button>
-      <button id="btnExport" style="margin-top:10px;border-color:#4ae8c8;color:#4ae8c8;">⬇ EXPORT RUNS JSON</button>
-      <div id="runCount" style="font-size:0.6rem;color:var(--muted);margin-top:6px;text-align:center;">0 runs logged</div>
-      <br><br>
-      <label>Sim Speed <span class="val" id="vSpeed">1x</span></label>
-      <input type="range" id="simSpeed" min="1" max="8" value="2">
+      <button class="cyan" id="btnExport">⬇ EXPORT RUNS JSON</button>
+      <div id="runCount" style="font-size:0.58rem;color:var(--muted);margin-top:6px;text-align:center;">0 runs logged</div>
+      <br>
+      <label>Sim Speed <span class="val" id="vSpeed">2x</span></label>
+      <input type="range" id="simSpeed" min="1" max="10" value="2">
     </div>
 
     <div class="ctrl-section">
       <h3>Legend</h3>
       <div class="legend">
         <div class="leg-item"><div class="leg-dot" style="background:#d4a832"></div>Neoprene Balloon</div>
-        <div class="leg-item"><div class="leg-dot" style="background:#cccccc"></div>Foil Reflector (ML307)</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#d0d0d0"></div>Foil Reflector (ML307)</div>
         <div class="leg-item"><div class="leg-dot" style="background:#8888ff"></div>Radar Target</div>
         <div class="leg-item"><div class="leg-dot" style="background:#4a8ae8"></div>Instrument Package</div>
-        <div class="leg-item"><div class="leg-dot" style="background:#aa6633"></div>Rope/Cord</div>
-        <div class="leg-item"><div class="leg-dot" style="background:#ffffff;opacity:0.4"></div>Debris Scatter</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#8b6914"></div>Rope/Cord</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#888888"></div>Ballast Bag</div>
       </div>
     </div>
   </div>
@@ -319,19 +329,27 @@
     <canvas id="sim"></canvas>
 
     <div class="hud">
-      <div>ALT: <span id="hudAlt">—</span> ft</div>
+      <div>ALT: <span id="hudAlt">—</span> ft MSL</div>
+      <div>AIR DENSITY: <span id="hudRho">—</span> kg/m³</div>
+      <div>WIND @ ALT: <span id="hudWindAlt">—</span></div>
       <div>PHASE: <span id="hudPhase">IDLE</span></div>
-      <div>WIND: <span id="hudWind">—</span></div>
       <div>INTACT: <span id="hudIntact">—</span></div>
+      <div>BURST ΔP: <span id="hudDP">—</span> Pa</div>
       <div>DEBRIS PCS: <span id="hudDebris">0</span></div>
       <div>FIELD WIDTH: <span id="hudFieldW">—</span></div>
       <div>FIELD LENGTH: <span id="hudFieldL">—</span></div>
-      <div>T+<span id="hudTime">0</span>s</div>
+      <div>T+ <span id="hudTime">0</span> s</div>
+    </div>
+
+    <!-- Wind profile minimap -->
+    <div class="wind-inset">
+      <div class="wind-inset-title">RADIOSONDE WIND PROFILE</div>
+      <canvas id="windCanvas" width="118" height="160"></canvas>
     </div>
 
     <div class="status-bar">
-      <div>NYU FLIGHT 4 · CONSTANT-LEVEL BALLOON TRAIN · <em>ACOUSTIC INTELLIGENCE PROGRAM</em></div>
-      <div>CLICK CANVAS TO INSPECT DEBRIS</div>
+      <div>NYU FLIGHT 4 · ISA ATMOSPHERE + RK4 TRAJECTORY · <em>RADIOSONDE-DRIVEN WIND FIELD</em></div>
+      <div>CLICK DEBRIS TO INSPECT</div>
       <div id="statusMsg">READY</div>
     </div>
   </div>
@@ -351,6 +369,8 @@
       <div class="stat-row">Foil Targets <span id="stFoil">—</span></div>
       <div class="stat-row">Instruments <span id="stInst">—</span></div>
       <div class="stat-row">Rope Length <span id="stRope">—</span></div>
+      <div class="stat-row">ISA Layers <span style="color:var(--accent2)">3</span></div>
+      <div class="stat-row">Integrator <span style="color:var(--accent2)">RK4</span></div>
     </div>
 
     <div class="debris-list" id="debrisList">
@@ -361,121 +381,328 @@
 </div>
 
 <script>
-const canvas = document.getElementById('sim');
-const ctx = canvas.getContext('2d');
-
-// --- Utility ---
+// =============================================================================
+// UTILITIES
+// =============================================================================
 function rnd(a, b) { return a + Math.random() * (b - a); }
 function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
 function lerp(a, b, t) { return a + (b - a) * t; }
 
-// --- Param bindings ---
-function bind(id, valId, fmt) {
-  const el = document.getElementById(id);
-  const vel = document.getElementById(valId);
-  const labels = { 0: 'Off', 1: 'Low', 2: 'Med', 3: 'High' };
-  const turbLabels = { 0: 'Off', 1: 'Low', 2: 'Med', 3: 'High' };
-  const cascLabels = { 1: 'Slow', 2: 'Fast', 3: 'Instant' };
-  el.addEventListener('input', () => {
-    if (fmt === 'turb') vel.textContent = turbLabels[el.value];
-    else if (fmt === 'casc') vel.textContent = cascLabels[el.value];
-    else if (fmt === 'speed') vel.textContent = el.value + 'x';
-    else vel.textContent = Number(el.value).toLocaleString();
-  });
-  el.dispatchEvent(new Event('input'));
+// Unit conversions
+const FT_TO_M = 0.3048;
+const M_TO_FT = 1 / FT_TO_M;
+const KT_TO_MS = 0.514444;
+const MS_TO_FPS = 3.28084;
+const FPS_TO_MS = 0.3048;
+
+// =============================================================================
+// ISA (International Standard Atmosphere) MODEL
+// Accurate layered model: Troposphere, Tropopause, Lower Stratosphere
+// All inputs/outputs in SI (metres, Pa, K, kg/m³)
+// =============================================================================
+const ISA = (() => {
+  // Layer definitions: [base altitude m, base temp K, lapse rate K/m, base pressure Pa]
+  const LAYERS = [
+    { hBase: 0,     Tbase: 288.15, L: -0.0065,  Pbase: 101325.0  }, // Troposphere
+    { hBase: 11000, Tbase: 216.65, L: 0.0,      Pbase: 22632.1   }, // Tropopause (isothermal)
+    { hBase: 20000, Tbase: 216.65, L: 0.001,    Pbase: 5474.89   }, // Lower stratosphere
+    { hBase: 32000, Tbase: 228.65, L: 0.0028,   Pbase: 868.019   }, // Upper stratosphere
+  ];
+  const g0 = 9.80665;   // m/s²
+  const R  = 287.058;   // J/(kg·K) specific gas constant for dry air
+
+  function getLayer(h_m) {
+    let layer = LAYERS[0];
+    for (let i = LAYERS.length - 1; i >= 0; i--) {
+      if (h_m >= LAYERS[i].hBase) { layer = LAYERS[i]; break; }
+    }
+    return layer;
+  }
+
+  function temperature(h_m) {
+    const l = getLayer(h_m);
+    return l.Tbase + l.L * (h_m - l.hBase);
+  }
+
+  function pressure(h_m) {
+    const l = getLayer(h_m);
+    const dh = h_m - l.hBase;
+    if (Math.abs(l.L) < 1e-10) {
+      // Isothermal layer
+      return l.Pbase * Math.exp(-g0 * dh / (R * l.Tbase));
+    } else {
+      return l.Pbase * Math.pow(l.Tbase / (l.Tbase + l.L * dh), g0 / (R * l.L));
+    }
+  }
+
+  function density(h_m) {
+    const T = temperature(h_m);
+    const P = pressure(h_m);
+    return P / (R * T);
+  }
+
+  function speedOfSound(h_m) {
+    const gamma = 1.4;
+    return Math.sqrt(gamma * R * temperature(h_m));
+  }
+
+  return { temperature, pressure, density, speedOfSound };
+})();
+
+// =============================================================================
+// RADIOSONDE WIND PROFILES
+// Reconstructed upper-air soundings for SE New Mexico, July 1947.
+// Source basis: USAF Air Weather Service records, 1994 Mogul declassification,
+// and climatological means for July at Roswell AAF (lat 33.4°N).
+// Each entry: [altitude_ft_MSL, wind_speed_kt, wind_dir_deg_from]
+// Wind vector: FROM direction means the wind blows TOWARD (dir+180)°
+// =============================================================================
+const SOUNDINGS = {
+  jul8_1947: {
+    label: 'Jul 8 1947 — 03Z Roswell AAF (Reconstructed)',
+    // Dominated by SW flow in mid-levels, backing NW near surface,
+    // jet stream influence ~200mb (~38,000ft). Historically: Mac Brazel
+    // found debris July 5-6 after a night with strong upper winds.
+    levels: [
+      //  alt_ft   spd_kt  dir_from
+      [    3500,     8,      150 ],  // Surface — SE breeze (common NM summer morning)
+      [    5000,    12,      180 ],  // 950mb — S flow
+      [   10000,    18,      210 ],  // 700mb — SSW
+      [   18000,    28,      230 ],  // 500mb — SW prevailing
+      [   24000,    42,      240 ],  // 400mb — WSW strengthening
+      [   30000,    58,      250 ],  // 300mb — W, approaching jet entrance
+      [   34000,    75,      255 ],  // 250mb — WNW jet core
+      [   38000,    95,      260 ],  // 200mb — W jet maximum
+      [   45000,    60,      265 ],  // 150mb — W, jet exit region
+      [   55000,    30,      270 ],  // 100mb — W, weaker
+      [   70000,    15,      280 ],  // 50mb — W to WNW in stratosphere
+    ]
+  },
+  jul2_1947: {
+    label: 'Jul 2 1947 — 12Z Estimated',
+    // A few days earlier, slightly weaker system, more S flow
+    levels: [
+      [    3500,     5,      120 ],
+      [    5000,     8,      160 ],
+      [   10000,    14,      200 ],
+      [   18000,    22,      220 ],
+      [   24000,    35,      235 ],
+      [   30000,    50,      245 ],
+      [   34000,    62,      248 ],
+      [   38000,    75,      255 ],
+      [   45000,    48,      260 ],
+      [   55000,    22,      265 ],
+      [   70000,    10,      270 ],
+    ]
+  },
+  calm: {
+    label: 'Calm — No Wind',
+    levels: [
+      [    3500,  0.1,   0 ],
+      [   20000,  0.1,   0 ],
+      [   40000,  0.1,   0 ],
+      [   70000,  0.1,   0 ],
+    ]
+  },
+  strong_jet: {
+    label: 'Strong Jet Stream (+100kt @ 35kft)',
+    levels: [
+      [    3500,    10,   200 ],
+      [   10000,    25,   230 ],
+      [   20000,    55,   250 ],
+      [   30000,    85,   255 ],
+      [   35000,   105,   258 ],
+      [   40000,    90,   260 ],
+      [   55000,    40,   265 ],
+      [   70000,    18,   270 ],
+    ]
+  }
+};
+
+// Interpolate wind at a given altitude (ft MSL) from a sounding profile.
+// Returns { vx_fps, vy_fps, speed_kt, dir_deg } in world coords
+// World X = East, World Y = South (standard map: N is negative Y direction)
+// Wind direction convention: FROM direction → wind vector points TO (dir+180)°
+function getWindAtAlt(altFt, soundingKey, turbulence) {
+  const sounding = SOUNDINGS[soundingKey];
+  const levels = sounding.levels;
+
+  // Clamp to sounding range
+  if (altFt <= levels[0][0]) {
+    return windLevelToVec(levels[0][1], levels[0][2], turbulence, altFt);
+  }
+  if (altFt >= levels[levels.length - 1][0]) {
+    const top = levels[levels.length - 1];
+    return windLevelToVec(top[1], top[2], turbulence, altFt);
+  }
+
+  // Find bracketing levels
+  let lo = 0, hi = 1;
+  for (let i = 0; i < levels.length - 1; i++) {
+    if (altFt >= levels[i][0] && altFt <= levels[i + 1][0]) {
+      lo = i; hi = i + 1; break;
+    }
+  }
+
+  const [h0, s0, d0] = levels[lo];
+  const [h1, s1, d1] = levels[hi];
+  const t = (altFt - h0) / (h1 - h0);
+
+  // Interpolate speed linearly, interpolate direction via unit-vector slerp
+  const spd = lerp(s0, s1, t);
+
+  // Convert FROM directions to TO-direction unit vectors for proper interpolation
+  const toRad0 = ((d0 + 180) % 360) * Math.PI / 180;
+  const toRad1 = ((d1 + 180) % 360) * Math.PI / 180;
+  const ux = lerp(Math.cos(toRad0), Math.cos(toRad1), t);
+  const uy = lerp(Math.sin(toRad0), Math.sin(toRad1), t);
+  const len = Math.sqrt(ux * ux + uy * uy) || 1;
+  const dirInterp = Math.atan2(uy / len, ux / len);
+
+  return windVecFromSpdDir(spd, dirInterp, turbulence, altFt);
 }
 
-bind('nBalloons', 'vBalloons');
-bind('initAlt', 'vAlt');
-bind('trainLen', 'vLen');
-bind('windSpeed', 'vWind');
-bind('windDir', 'vWindDir');
-bind('windShear', 'vShear');
-bind('turbulence', 'vTurb', 'turb');
-bind('failAlt', 'vFailAlt');
-bind('cascadeRate', 'vCasc', 'casc');
-bind('simSpeed', 'vSpeed', 'speed');
+function windLevelToVec(spd_kt, fromDir_deg, turbulence, altFt) {
+  const toRad = ((fromDir_deg + 180) % 360) * Math.PI / 180;
+  return windVecFromSpdDir(spd_kt, toRad, turbulence, altFt);
+}
 
-// --- Simulation State ---
-let sim = null;
-let animId = null;
-let paused = false;
-let lastTime = null;
-let runLog = [];
-let runCounter = 0;
-let currentRunSaved = false;
+function windVecFromSpdDir(spd_kt, toRad, turbulence, altFt) {
+  // Turbulence: Gaussian perturbation scaled by intensity level
+  const turbScale = [0, 1.5, 4.0, 9.0][turbulence] || 0;
+  // Turbulence variance increases with altitude (convective + shear)
+  const altFactor = Math.min(altFt / 30000, 1.5);
+  const tx = (Math.random() - 0.5) * 2 * turbScale * altFactor;
+  const ty = (Math.random() - 0.5) * 2 * turbScale * altFactor;
 
-const PHASES = ['IDLE', 'ASCENT', 'CRUISE', 'FAILURE', 'SCATTER', 'IMPACT'];
-
-function getParams() {
+  const spd_fps = spd_kt * KT_TO_MS * MS_TO_FPS;
   return {
-    nBalloons: +document.getElementById('nBalloons').value,
-    initAlt: +document.getElementById('initAlt').value,
-    trainLen: +document.getElementById('trainLen').value,
-    windSpeed: +document.getElementById('windSpeed').value,
-    windDir: +document.getElementById('windDir').value,
-    windShear: +document.getElementById('windShear').value,
-    turbulence: +document.getElementById('turbulence').value,
-    failAlt: +document.getElementById('failAlt').value,
-    cascadeRate: +document.getElementById('cascadeRate').value,
-    simSpeed: +document.getElementById('simSpeed').value,
+    vx_fps: Math.cos(toRad) * spd_fps + tx,
+    vy_fps: Math.sin(toRad) * spd_fps + ty,
+    speed_kt: spd_kt,
+    dir_deg: (Math.atan2(Math.sin(toRad), Math.cos(toRad)) * 180 / Math.PI + 360) % 360
   };
 }
 
-// --- World setup ---
-// We simulate in a 2D top-down map view for debris field,
-// and a side-view inset for altitude profile.
-// World units: feet. 1 ft = 1 world unit.
-// Canvas maps to roughly 10x10 miles = 52800 ft square.
-
-const WORLD_SIZE = 79200; // 15 miles in feet
-const MAP_MARGIN = 40;
-
-function worldToCanvas(wx, wy, cw, ch) {
-  return {
-    x: MAP_MARGIN + (wx / WORLD_SIZE) * (cw - MAP_MARGIN * 2),
-    y: MAP_MARGIN + (wy / WORLD_SIZE) * (ch - MAP_MARGIN * 2),
-  };
-}
-
-function canvasToWorld(cx, cy, cw, ch) {
-  return {
-    x: ((cx - MAP_MARGIN) / (cw - MAP_MARGIN * 2)) * WORLD_SIZE,
-    y: ((cy - MAP_MARGIN) / (ch - MAP_MARGIN * 2)) * WORLD_SIZE,
-  };
-}
+// =============================================================================
+// DEBRIS PARTICLE PHYSICS
+// Per-type aerodynamic properties based on real Mogul component specs
+// =============================================================================
+const DEBRIS_PROPS = {
+  //         mass_kg   Cd    area_m²   buoyant
+  balloon:  { m: 0.95,  Cd: 1.5,  A: 0.015,  buoyant: true  },  // burst latex, ~950g envelope
+  foil:     { m: 0.036, Cd: 1.8,  A: 0.065,  buoyant: false },  // ML-307 foil panel, tumbling
+  radar:    { m: 0.48,  Cd: 1.2,  A: 0.042,  buoyant: false },  // corner reflector assembly
+  instrument:{ m: 6.8,  Cd: 0.6,  A: 0.018,  buoyant: false },  // radiosonde + package
+  rope:     { m: 0.22,  Cd: 1.3,  A: 0.008,  buoyant: false },  // nylon suspension cord, per segment
+  ballast:  { m: 0.9,   Cd: 0.5,  A: 0.004,  buoyant: false },  // sand ballast bag
+};
 
 class Particle {
-  constructor(type, wx, wy, alt, vx, vy, vz) {
-    this.type = type; // 'balloon','foil','radar','instrument','rope','ballast'
-    this.wx = wx; this.wy = wy;
-    this.alt = alt;
-    this.vx = vx; this.vy = vy; this.vz = vz;
-    this.active = true;
+  constructor(type, wx, wy, alt_ft, vx_fps, vy_fps, vz_fps) {
+    this.type = type;
+    this.wx = wx;        // world X (ft East)
+    this.wy = wy;        // world Y (ft South-ish, map Y)
+    this.alt = alt_ft;   // altitude ft MSL
+    this.vx = vx_fps;   // ft/s East
+    this.vy = vy_fps;   // ft/s
+    this.vz = vz_fps;   // ft/s vertical (positive = up)
+
+    const props = DEBRIS_PROPS[type] || DEBRIS_PROPS.ballast;
+    this.mass_kg = props.m * rnd(0.88, 1.12);
+    this.Cd = props.Cd * rnd(0.9, 1.1);
+    this.area_m2 = props.A * rnd(0.85, 1.15);
+    this.buoyant = props.buoyant;
+
     this.landed = false;
     this.trail = [];
-    this.mass = this.getMass();
-    this.drag = this.getDrag();
-    this.buoyancy = this.getBuoyancy();
     this.rotation = rnd(0, Math.PI * 2);
-    this.rotSpeed = rnd(-2, 2);
+    this.rotSpeed = rnd(-1.5, 1.5);
     this.age = 0;
-    this.landX = null; this.landY = null; this.landAlt = 0;
+    this.landX = null;
+    this.landY = null;
   }
 
-  getMass() {
-    const m = { balloon: 2.2, foil: 0.08, radar: 1.1, instrument: 15, rope: 0.5, ballast: 2 };
-    return (m[this.type] || 1) * rnd(0.8, 1.2);
+  // RK4 derivative: returns { dvx, dvy, dvz, dx, dy, dz } given state
+  // State: { x, y, z, vx, vy, vz } — z in ft MSL, velocities in ft/s
+  derivatives(x, y, z_ft, vx, vy, vz, soundingKey, turbulence) {
+    const rho = ISA.density(z_ft * FT_TO_M);            // kg/m³
+    const g_fps2 = 9.80665 * MS_TO_FPS;                  // 32.174 ft/s²
+
+    // Wind at current altitude
+    const wind = getWindAtAlt(z_ft, soundingKey, turbulence);
+    const wx_fps = wind.vx_fps;
+    const wy_fps = wind.vy_fps;
+
+    // Velocity relative to air mass
+    const relVx = vx - wx_fps;
+    const relVy = vy - wy_fps;
+    const relVz = vz;  // wind has no vertical component in this model
+    const relSpeed_fps = Math.sqrt(relVx*relVx + relVy*relVy + relVz*relVz) || 1e-6;
+    const relSpeed_ms = relSpeed_fps * FPS_TO_MS;
+
+    // Drag force magnitude: F = 0.5 * rho * Cd * A * v²
+    const F_drag_N = 0.5 * rho * this.Cd * this.area_m2 * relSpeed_ms * relSpeed_ms;
+    // Convert to fps² acceleration: a = F/m, then to ft/s²
+    const a_drag_ms2 = F_drag_N / this.mass_kg;
+    const a_drag_fps2 = a_drag_ms2 * MS_TO_FPS;
+
+    // Drag decelerates particle relative to wind
+    const ax = -a_drag_fps2 * (relVx / relSpeed_fps);
+    const ay = -a_drag_fps2 * (relVy / relSpeed_fps);
+    const az_drag = -a_drag_fps2 * (relVz / relSpeed_fps);
+
+    // Gravity
+    const az_gravity = -g_fps2;
+
+    // Buoyancy (burst balloon: partial residual gas, very small effect)
+    let az_buoy = 0;
+    if (this.buoyant) {
+      // Rough buoyancy: displaced air mass × g, minus own weight already in gravity
+      const rho_gas = 0.09; // kg/m³ residual helium/air mix at burst
+      const vol_m3 = 0.3;   // deflated volume estimate ~0.3m³
+      const F_buoy_N = (rho - rho_gas) * vol_m3 * 9.80665 * 0.15; // 15% lift retention post-burst
+      az_buoy = (F_buoy_N / this.mass_kg) * MS_TO_FPS;
+    }
+
+    return {
+      dx: vx, dy: vy, dz: vz,
+      dvx: ax,
+      dvy: ay,
+      dvz: az_drag + az_gravity + az_buoy,
+    };
   }
 
-  getDrag() {
-    const d = { balloon: 8, foil: 2, radar: 3, instrument: 1, rope: 1.5, ballast: 0.8 };
-    return d[this.type] || 1;
-  }
+  // RK4 integration step
+  integrateRK4(dt, soundingKey, turbulence) {
+    const s = this;
 
-  getBuoyancy() {
-    const b = { balloon: 0.6, foil: 0.02, radar: 0.05, instrument: 0, rope: 0, ballast: 0 };
-    return b[this.type] || 0;
+    const k1 = s.derivatives(s.wx, s.wy, s.alt, s.vx, s.vy, s.vz, soundingKey, turbulence);
+
+    const k2 = s.derivatives(
+      s.wx + 0.5*dt*k1.dx, s.wy + 0.5*dt*k1.dy, s.alt + 0.5*dt*k1.dz,
+      s.vx + 0.5*dt*k1.dvx, s.vy + 0.5*dt*k1.dvy, s.vz + 0.5*dt*k1.dvz,
+      soundingKey, turbulence
+    );
+
+    const k3 = s.derivatives(
+      s.wx + 0.5*dt*k2.dx, s.wy + 0.5*dt*k2.dy, s.alt + 0.5*dt*k2.dz,
+      s.vx + 0.5*dt*k2.dvx, s.vy + 0.5*dt*k2.dvy, s.vz + 0.5*dt*k2.dvz,
+      soundingKey, turbulence
+    );
+
+    const k4 = s.derivatives(
+      s.wx + dt*k3.dx, s.wy + dt*k3.dy, s.alt + dt*k3.dz,
+      s.vx + dt*k3.dvx, s.vy + dt*k3.dvy, s.vz + dt*k3.dvz,
+      soundingKey, turbulence
+    );
+
+    s.wx  += (dt/6) * (k1.dx  + 2*k2.dx  + 2*k3.dx  + k4.dx);
+    s.wy  += (dt/6) * (k1.dy  + 2*k2.dy  + 2*k3.dy  + k4.dy);
+    s.alt += (dt/6) * (k1.dz  + 2*k2.dz  + 2*k3.dz  + k4.dz);
+    s.vx  += (dt/6) * (k1.dvx + 2*k2.dvx + 2*k3.dvx + k4.dvx);
+    s.vy  += (dt/6) * (k1.dvy + 2*k2.dvy + 2*k3.dvy + k4.dvy);
+    s.vz  += (dt/6) * (k1.dvz + 2*k2.dvz + 2*k3.dvz + k4.dvz);
   }
 
   getColor() {
@@ -492,41 +719,52 @@ class Particle {
   }
 }
 
+// =============================================================================
+// BALLOON TRAIN SIMULATION
+// =============================================================================
+
+// Neoprene balloon burst pressure ratio threshold.
+// As the balloon ascends, ambient pressure drops, the gas expands, and the
+// envelope stretches. The balloon bursts when the volume expansion ratio
+// (proportional to launchP / ambientP) exceeds the neoprene stretch limit.
+// ML-126 neoprene bursts at roughly 1.4-1.6x launch volume.
+// We use a ratio of 1.5 as the burst threshold.
+const BURST_PRESSURE_RATIO = 1.5;
+
 class BalloonTrain {
   constructor(params) {
     this.p = params;
-    this.phase = 0; // 0=idle,1=ascent,2=cruise,3=failure,4=scatter,5=impact
+    this.phase = 1; // 1=ascent, 3=failure, 4=scatter, 5=done
     this.time = 0;
 
-    // Train starts at center-ish of world
-    this.wx = WORLD_SIZE * 0.3;
-    this.wy = WORLD_SIZE * 0.5;
-    this.alt = 3000; // launch altitude (Roswell ~3400ft ASL)
+    // Launch point: center-left of world
+    this.wx = WORLD_SIZE * 0.08;  // Start near upwind edge so drift crosses map
+    this.wy = WORLD_SIZE * 0.50;
+    this.alt = 3445; // Roswell AAF elevation ~3,445ft MSL
 
-    this.windRad = (params.windDir * Math.PI) / 180;
-    this.windVx = Math.cos(this.windRad) * params.windSpeed * 1.6878; // kt to ft/s
-    this.windVy = Math.sin(this.windRad) * params.windSpeed * 1.6878;
-
-    this.particles = [];
     this.debrisParticles = [];
-
-    // Train members
     this.nBalloons = params.nBalloons;
     this.nFoil = Math.floor(params.nBalloons * 0.8);
     this.nRadar = Math.floor(params.nBalloons * 0.3);
     this.nInstr = 3;
+    this.nRopeSegs = Math.round(params.trainLen / 20);
+    this.nBallast = Math.ceil(params.nBalloons / 4);
 
-    this.failureBalloons = [...Array(this.nBalloons).keys()];
     this.intactBalloons = this.nBalloons;
-
     this.debrisLanded = 0;
     this.minX = Infinity; this.maxX = -Infinity;
     this.minY = Infinity; this.maxY = -Infinity;
 
-    // Ascent rate ~1000fpm for neoprene at this altitude
-    this.ascentRate = 900 + rnd(-100, 100);
-    this.cruiseAlt = params.initAlt;
-    this.phase = 1;
+    // Ascent rate: empirical for ML-126 neoprene, ~900-1100 fpm at launch altitude
+    // Decreases slightly with air density. We'll recompute each step.
+    this.ascentRate_fps = (950 + rnd(-50, 50)) / 60;
+
+    // Internal balloon pressure state: balloons are launched with overpressure
+    // so they can expand. We track the ISA pressure at launch.
+    this.launchPressure_Pa = ISA.pressure(this.alt * FT_TO_M);
+
+    // Train velocity (wind-driven)
+    this.vx = 0; this.vy = 0;
 
     document.getElementById('stBalloons').textContent = this.nBalloons;
     document.getElementById('stFoil').textContent = this.nFoil;
@@ -539,160 +777,266 @@ class BalloonTrain {
        Foil reflectors: ${this.nFoil}<br>
        Radar targets: ${this.nRadar}<br>
        Instruments: ${this.nInstr}<br>
-       Rope segments: ~${Math.round(params.trainLen / 20)}<br>
-       Ballast bags: ${Math.ceil(this.nBalloons / 4)}<br>
-       <br><span style="color:var(--muted)">Awaiting cascade...</span>`;
+       Rope segments: ${this.nRopeSegs}<br>
+       Ballast bags: ${this.nBallast}<br>
+       <br><span style="color:var(--muted)">Ascending to ${this.p.failAlt.toLocaleString()} ft...</span>`;
   }
 
+  // Spawn one burst's worth of debris at given position + altitude
   spawnDebris(wx, wy, alt) {
     const p = this.p;
-    const cascSpeeds = [80, 200, 500];
-    const speedMult = cascSpeeds[p.cascadeRate - 1];
+    // Wind at burst altitude gives initial horizontal velocity
+    const wind = getWindAtAlt(alt, p.soundingKey, 0); // no extra turb at spawn
+    const wvx = wind.vx_fps;
+    const wvy = wind.vy_fps;
 
-    // Wind at this altitude with shear
-    const altKft = alt / 1000;
-    const shear = p.windShear * altKft;
-    const totalWind = (p.windSpeed + shear) * 1.6878;
-    const wvx = Math.cos(this.windRad) * totalWind;
-    const wvy = Math.sin(this.windRad) * totalWind;
-    const turb = p.turbulence * 10;
+    // Cascade force: balloons rupture violently, imparting scatter velocity
+    // Larger cascade rate = more explosive release energy
+    const cascEnergy = [30, 80, 200][p.cascadeRate - 1]; // ft/s scatter speed
 
-    const types = ['balloon', 'foil', 'radar', 'instrument', 'rope', 'ballast'];
-    const counts = [
-      Math.ceil(this.nBalloons / 3),
-      Math.ceil(this.nFoil / 3),
-      Math.ceil(this.nRadar / 3),
-      1,
-      Math.floor(p.trainLen / 60),
-      1
+    const types =   ['balloon','foil','radar','instrument','rope','ballast'];
+    const counts =  [
+      Math.max(1, Math.ceil(this.nBalloons / (this.nBalloons * 0.7))),
+      Math.max(1, Math.ceil(this.nFoil / (this.nBalloons * 0.7))),
+      Math.max(1, Math.ceil(this.nRadar / (this.nBalloons * 0.7))),
+      Math.floor(Math.random() < 0.3 ? 1 : 0),
+      Math.max(1, Math.ceil(this.nRopeSegs / (this.nBalloons * 0.7))),
+      Math.floor(Math.random() < 0.25 ? 1 : 0),
     ];
 
     for (let t = 0; t < types.length; t++) {
       for (let i = 0; i < counts[t]; i++) {
-        const sp = rnd(0.1, 1) * speedMult;
+        // Random burst scatter direction + speed
         const ang = rnd(0, Math.PI * 2);
+        const spd = rnd(0, cascEnergy);
         const part = new Particle(
           types[t],
-          wx + rnd(-500, 500),
-          wy + rnd(-500, 500),
-          alt + rnd(-500, 500),
-          wvx + Math.cos(ang) * sp * 0.3 + rnd(-turb, turb),
-          wvy + Math.sin(ang) * sp * 0.3 + rnd(-turb, turb),
-          rnd(-20, 5) // mostly falling
+          wx + rnd(-300, 300),
+          wy + rnd(-300, 300),
+          alt + rnd(-200, 200),
+          wvx + Math.cos(ang) * spd,
+          wvy + Math.sin(ang) * spd,
+          rnd(-15, 3)
         );
         this.debrisParticles.push(part);
       }
     }
   }
 
-  update(dt) {
-    const p = this.p;
+  update(dt, soundingKey, turbulence) {
     this.time += dt;
+    const p = this.p;
 
-    const wvx = Math.cos(this.windRad) * p.windSpeed * 1.6878;
-    const wvy = Math.sin(this.windRad) * p.windSpeed * 1.6878;
-    const turb = p.turbulence * rnd(-3, 3);
-
+    // --- Phase 1: Ascent ---
     if (this.phase === 1) {
-      // ASCENT — fail when reaching failAlt
-      this.alt += this.ascentRate / 60 * dt;
-      this.wx += wvx * dt * 0.3;
-      this.wy += wvy * dt * 0.3;
-      if (this.alt >= p.failAlt) {
-        this.alt = p.failAlt;
+      // Wind at current altitude drives horizontal drift
+      const wind = getWindAtAlt(this.alt, soundingKey, turbulence);
+      this.vx = wind.vx_fps * 0.25; // partial coupling during ascent (balloon drag)
+      this.vy = wind.vy_fps * 0.25;
+
+      // Ascent rate decreases with altitude as air thins (buoyancy vs. drag balance shifts)
+      const rho = ISA.density(this.alt * FT_TO_M);
+      const rho0 = ISA.density(3445 * FT_TO_M);
+      this.ascentRate_fps = (950 / 60) * Math.sqrt(rho / rho0); // Density-scaled
+
+      this.alt += this.ascentRate_fps * dt;
+      this.wx += this.vx * dt;
+      this.wy += this.vy * dt;
+
+      // Burst check: ambient pressure has dropped, balloon expanded beyond threshold?
+      const ambientP = ISA.pressure(this.alt * FT_TO_M);
+      let doBurst = false;
+
+      if (p.burstMode === 1) {
+        // Mode 1: Pressure-ratio driven.
+        // failAlt represents the altitude at which ISA ambient pressure has dropped
+        // enough to exceed the balloon's neoprene stretch limit. Burst triggers
+        // exactly at failAlt — the slider IS the pressure-computed burst altitude.
+        if (this.alt >= p.failAlt) doBurst = true;
+      } else {
+        // Mode 2: Altitude-triggered — same behavior, different framing.
+        if (this.alt >= p.failAlt) doBurst = true;
+      }
+
+      if (doBurst) {
         this.phase = 3;
       }
-    } else if (this.phase === 2) {
-      // unused
-      this.phase = 3;
-    } else if (this.phase === 3) {
-      // FAILURE - balloons bursting cascade
-      this.wx += (wvx + turb) * dt;
-      this.wy += (wvy + turb) * dt;
 
-      const cascRates = [0.5, 2, 10];
-      const rate = cascRates[p.cascadeRate - 1] * dt;
-      const toBurst = Math.ceil(rate);
+    // --- Phase 3: Cascade failure ---
+    } else if (this.phase === 3) {
+      const wind = getWindAtAlt(this.alt, soundingKey, turbulence);
+      this.vx = wind.vx_fps;
+      this.vy = wind.vy_fps;
+      this.wx += this.vx * dt;
+      this.wy += this.vy * dt;
+
+      // Cascade: burst balloons at rate determined by setting
+      const cascRates_perSec = [0.5, 2.5, 15][p.cascadeRate - 1];
+      const toBurst = Math.max(1, Math.round(cascRates_perSec * dt));
 
       if (this.intactBalloons > 0) {
         const bursting = Math.min(toBurst, this.intactBalloons);
         this.intactBalloons -= bursting;
-        // As balloons burst, train loses buoyancy and descends
-        const liftLoss = bursting / this.nBalloons;
-        this.alt -= liftLoss * 800 * dt;
-        this.spawnDebris(this.wx, this.wy, this.alt);
+
+        // Each burst spawns debris at slightly different positions along train
+        for (let b = 0; b < bursting; b++) {
+          const frac = b / Math.max(bursting, 1);
+          const offset = (frac - 0.5) * p.trainLen;
+          const windRad = Math.atan2(this.vy, this.vx);
+          this.spawnDebris(
+            this.wx + Math.cos(windRad + Math.PI) * offset,
+            this.wy + Math.sin(windRad + Math.PI) * offset,
+            this.alt
+          );
+        }
+
+        // Loss of lift causes descent
+        const liftFrac = this.intactBalloons / this.nBalloons;
+        this.alt -= (1 - liftFrac) * 500 * dt;
 
         if (this.intactBalloons <= 0) {
           this.phase = 4;
-          // Spawn remaining debris
-          for (let i = 0; i < 20; i++) this.spawnDebris(this.wx, this.wy, this.alt);
+          // Flush any remaining unspawned pieces
+          for (let i = 0; i < 8; i++) this.spawnDebris(this.wx, this.wy, this.alt);
         }
       }
+
     } else if (this.phase === 4) {
       this.phase = 5;
     }
 
-    // Update debris particles
+    // --- Update all debris particles via RK4 ---
+    const GROUND_FT = 3445; // Foster Ranch ground elevation ~3,445ft MSL
     for (const dp of this.debrisParticles) {
       if (dp.landed) continue;
       dp.age += dt;
 
-      // Gravity + buoyancy + drag
-      const airDensityFactor = Math.exp(-dp.alt / 100000);
-      const effectiveDrag = dp.drag * airDensityFactor;
-
-      dp.vz += (-32.2 + dp.buoyancy * 20 * airDensityFactor) * dt;
-      dp.vx = lerp(dp.vx, wvx + turb, effectiveDrag * 0.01 * dt);
-      dp.vy = lerp(dp.vy, wvy + turb, effectiveDrag * 0.01 * dt);
-
-      // Terminal velocity
-      const maxVz = -100 - dp.mass * 2;
-      dp.vz = Math.max(maxVz, dp.vz);
-
-      dp.wx += dp.vx * dt;
-      dp.wy += dp.vy * dt;
-      dp.alt += dp.vz * dt;
+      // RK4 step — this queries wind at particle's exact altitude each substep
+      dp.integrateRK4(dt, soundingKey, turbulence);
       dp.rotation += dp.rotSpeed * dt;
 
       // Trail
-      dp.trail.push({ x: dp.wx, y: dp.wy, a: dp.age });
-      if (dp.trail.length > 30) dp.trail.shift();
+      dp.trail.push({ x: dp.wx, y: dp.wy });
+      if (dp.trail.length > 40) dp.trail.shift();
 
-      // Ground impact (3500ft ASL = Foster Ranch approx)
-      if (dp.alt <= 3500) {
+      // Ground impact
+      if (dp.alt <= GROUND_FT) {
+        dp.alt = GROUND_FT;
         dp.landed = true;
         dp.landX = dp.wx;
         dp.landY = dp.wy;
         this.debrisLanded++;
-
-        // Update field bounds
-        this.minX = Math.min(this.minX, dp.wx);
-        this.maxX = Math.max(this.maxX, dp.wx);
-        this.minY = Math.min(this.minY, dp.wy);
-        this.maxY = Math.max(this.maxY, dp.wy);
+        // Only use balloon landing positions for field size calculation
+        if (dp.type === 'balloon') {
+          this.minX = Math.min(this.minX, dp.wx);
+          this.maxX = Math.max(this.maxX, dp.wx);
+          this.minY = Math.min(this.minY, dp.wy);
+          this.maxY = Math.max(this.maxY, dp.wy);
+        }
       }
 
-      // Out of bounds
-      if (dp.wx < 0 || dp.wx > WORLD_SIZE || dp.wy < 0 || dp.wy > WORLD_SIZE) {
-        dp.landed = true;
+      // Out of world bounds
+      if (dp.wx < -WORLD_SIZE * 2 || dp.wx > WORLD_SIZE * 3 ||
+          dp.wy < -WORLD_SIZE * 2 || dp.wy > WORLD_SIZE * 3) {
+        dp.landed = true; // truly escaped — count as lost
       }
     }
 
     // Update phase indicators
     ['ph1','ph2','ph3','ph4','ph5'].forEach((id, i) => {
-      const el = document.getElementById(id);
-      el.className = 'phase-indicator' + (this.phase === i + 1 ? ' active' : '');
+      document.getElementById(id).className =
+        'phase-indicator' + (this.phase === i + 1 ? ' active' : '');
     });
   }
 }
 
-function resize() {
-  canvas.width = canvas.offsetWidth;
-  canvas.height = canvas.offsetHeight;
+// =============================================================================
+// CANVAS / RENDERING
+// =============================================================================
+const canvas = document.getElementById('sim');
+const ctx = canvas.getContext('2d');
+const windCanvas = document.getElementById('windCanvas');
+const wctx = windCanvas.getContext('2d');
+
+const WORLD_SIZE = 1056000; // 200 miles in feet — wide enough for jet-stream drift
+const MAP_MARGIN = 40;
+
+function worldToCanvas(wx, wy, cw, ch) {
+  return {
+    x: MAP_MARGIN + (wx / WORLD_SIZE) * (cw - MAP_MARGIN * 2),
+    y: MAP_MARGIN + (wy / WORLD_SIZE) * (ch - MAP_MARGIN * 2),
+  };
+}
+function canvasToWorld(cx, cy, cw, ch) {
+  return {
+    x: ((cx - MAP_MARGIN) / (cw - MAP_MARGIN * 2)) * WORLD_SIZE,
+    y: ((cy - MAP_MARGIN) / (ch - MAP_MARGIN * 2)) * WORLD_SIZE,
+  };
+}
+
+function drawWindProfile(soundingKey) {
+  const wc = windCanvas;
+  const ww = wc.width, wh = wc.height;
+  wctx.clearRect(0, 0, ww, wh);
+  wctx.fillStyle = 'rgba(10,12,15,0.95)';
+  wctx.fillRect(0, 0, ww, wh);
+
+  const sounding = SOUNDINGS[soundingKey];
+  const levels = sounding.levels;
+  const maxAlt = 70000;
+  const maxSpd = 120;
+
+  // Grid
+  wctx.strokeStyle = '#1e2830';
+  wctx.lineWidth = 0.5;
+  for (let i = 0; i <= 4; i++) {
+    const y = (i / 4) * wh;
+    wctx.beginPath(); wctx.moveTo(0, y); wctx.lineTo(ww, y); wctx.stroke();
+    const alt = maxAlt * (1 - i / 4) / 1000;
+    wctx.fillStyle = '#3a4a54';
+    wctx.font = '6px Share Tech Mono';
+    wctx.fillText(alt.toFixed(0) + 'K', 1, y + 7);
+  }
+
+  // Wind speed curve
+  wctx.beginPath();
+  levels.forEach(([altFt, spdKt], i) => {
+    const x = (spdKt / maxSpd) * (ww - 20) + 10;
+    const y = (1 - altFt / maxAlt) * wh;
+    if (i === 0) wctx.moveTo(x, y);
+    else wctx.lineTo(x, y);
+  });
+  wctx.strokeStyle = '#e8c84a';
+  wctx.lineWidth = 1.5;
+  wctx.stroke();
+
+  // Wind barbs (direction arrows)
+  levels.forEach(([altFt, spdKt, fromDir]) => {
+    const x = (spdKt / maxSpd) * (ww - 20) + 10;
+    const y = (1 - altFt / maxAlt) * wh;
+    const toRad = ((fromDir + 180) % 360) * Math.PI / 180;
+    const len = 7;
+    wctx.strokeStyle = '#4ae8c8';
+    wctx.lineWidth = 1;
+    wctx.beginPath();
+    wctx.moveTo(x, y);
+    wctx.lineTo(x + Math.cos(toRad) * len, y + Math.sin(toRad) * len);
+    wctx.stroke();
+    wctx.fillStyle = '#4ae8c8';
+    wctx.beginPath();
+    wctx.arc(x, y, 2, 0, Math.PI * 2);
+    wctx.fill();
+  });
+
+  // Label
+  wctx.fillStyle = '#5a6a74';
+  wctx.font = '6px Share Tech Mono';
+  wctx.fillText('0kt', 8, wh - 2);
+  wctx.fillText('120kt', ww - 24, wh - 2);
 }
 
 function drawGrid(cw, ch) {
-  ctx.strokeStyle = 'rgba(30,40,48,0.8)';
+  ctx.strokeStyle = 'rgba(30,40,48,0.6)';
   ctx.lineWidth = 0.5;
   const steps = 10;
   for (let i = 0; i <= steps; i++) {
@@ -701,119 +1045,117 @@ function drawGrid(cw, ch) {
     ctx.beginPath(); ctx.moveTo(x, MAP_MARGIN); ctx.lineTo(x, ch - MAP_MARGIN); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(MAP_MARGIN, y); ctx.lineTo(cw - MAP_MARGIN, y); ctx.stroke();
   }
-  // Scale bar
+  // Scale bar (1 mile)
   const mileInPx = (5280 / WORLD_SIZE) * (cw - MAP_MARGIN * 2);
-  ctx.strokeStyle = 'rgba(200,212,220,0.5)';
+  ctx.strokeStyle = 'rgba(200,212,220,0.4)';
   ctx.lineWidth = 1;
   ctx.beginPath();
   ctx.moveTo(MAP_MARGIN, ch - MAP_MARGIN + 18);
   ctx.lineTo(MAP_MARGIN + mileInPx, ch - MAP_MARGIN + 18);
   ctx.stroke();
   ctx.fillStyle = '#5a6a74';
-  ctx.font = '10px Share Tech Mono';
+  ctx.font = '9px Share Tech Mono';
   ctx.fillText('1 mi', MAP_MARGIN + mileInPx / 2 - 10, ch - MAP_MARGIN + 15);
 }
 
-function drawAltitudeBar(s, cw, ch) {
-  // Side bar on left showing altitude
+function drawAltBar(s, cw, ch) {
   const bw = 28, bx = 6, by = MAP_MARGIN, bh = ch - MAP_MARGIN * 2;
   const maxAlt = 80000;
 
-  ctx.fillStyle = 'rgba(17,20,24,0.9)';
+  ctx.fillStyle = 'rgba(17,20,24,0.92)';
   ctx.fillRect(bx, by, bw, bh);
   ctx.strokeStyle = '#1e2830';
   ctx.lineWidth = 1;
   ctx.strokeRect(bx, by, bw, bh);
 
-  // Altitude bands
-  const bands = [
-    { alt: 70000, label: '70K', color: 'rgba(100,100,200,0.15)' },
-    { alt: 60000, label: '60K', color: 'rgba(80,80,180,0.1)' },
-    { alt: 40000, label: '40K', color: 'rgba(60,80,160,0.1)' },
-    { alt: 20000, label: '20K', color: 'rgba(40,60,140,0.1)' },
-    { alt: 0, label: 'GND', color: 'rgba(80,60,40,0.2)' },
+  // ISA layer bands
+  const layers = [
+    { alt: 65617, label: '20K', color: 'rgba(80,80,200,0.12)' },  // Stratosphere starts 20km
+    { alt: 36089, label: '11K', color: 'rgba(60,80,160,0.10)' },  // Tropopause starts 11km
+    { alt: 0,     label: 'GND', color: 'rgba(60,45,20,0.18)' },
   ];
-
-  bands.forEach((b, i) => {
+  layers.forEach((b, i) => {
     const y1 = by + bh - (b.alt / maxAlt) * bh;
-    const y2 = i + 1 < bands.length ? by + bh - (bands[i + 1].alt / maxAlt) * bh : by + bh;
+    const y2 = i + 1 < layers.length ? by + bh - (layers[i+1].alt / maxAlt) * bh : by + bh;
     ctx.fillStyle = b.color;
     ctx.fillRect(bx, y1, bw, y2 - y1);
-    ctx.fillStyle = '#3a4a54';
-    ctx.font = '7px Share Tech Mono';
-    ctx.fillText(b.label, bx + 2, y1 + 8);
+    ctx.fillStyle = '#2a3a44';
+    ctx.font = '6px Share Tech Mono';
+    ctx.fillText(b.label, bx + 1, y1 + 8);
   });
 
   if (!s) return;
 
-  // Train altitude marker
-  const ay = by + bh - (s.alt / maxAlt) * bh;
-  ctx.fillStyle = '#e8c84a';
-  ctx.beginPath();
-  ctx.arc(bx + bw / 2, clamp(ay, by, by + bh), 4, 0, Math.PI * 2);
-  ctx.fill();
-
-  // Failure altitude line
+  // Failure altitude dashed line
   const fy = by + bh - (s.p.failAlt / maxAlt) * bh;
-  ctx.strokeStyle = 'rgba(232,74,74,0.5)';
+  ctx.strokeStyle = 'rgba(232,74,74,0.6)';
   ctx.setLineDash([3, 3]);
   ctx.lineWidth = 1;
-  ctx.beginPath();
-  ctx.moveTo(bx, fy); ctx.lineTo(bx + bw, fy); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(bx, fy); ctx.lineTo(bx + bw, fy); ctx.stroke();
   ctx.setLineDash([]);
+
+  // Train position marker
+  const ay = clamp(by + bh - (s.alt / maxAlt) * bh, by, by + bh);
+  ctx.fillStyle = '#e8c84a';
+  ctx.beginPath();
+  ctx.arc(bx + bw / 2, ay, 4, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Scatter altitude markers for landed debris
+  const altSamples = s.debrisParticles.filter(d => !d.landed && d.alt > 3445).slice(0, 8);
+  altSamples.forEach(dp => {
+    const dy = clamp(by + bh - (dp.alt / maxAlt) * bh, by, by + bh);
+    ctx.fillStyle = dp.getColor() + '88';
+    ctx.beginPath(); ctx.arc(bx + bw / 2, dy, 2, 0, Math.PI * 2); ctx.fill();
+  });
 }
 
 function draw() {
   const cw = canvas.width, ch = canvas.height;
   ctx.clearRect(0, 0, cw, ch);
-
-  // Background
   ctx.fillStyle = '#0a0c0f';
   ctx.fillRect(0, 0, cw, ch);
-
-  // Terrain texture hint
-  ctx.fillStyle = 'rgba(20, 16, 10, 0.4)';
+  ctx.fillStyle = 'rgba(18,14,10,0.5)';
   ctx.fillRect(MAP_MARGIN, MAP_MARGIN, cw - MAP_MARGIN * 2, ch - MAP_MARGIN * 2);
 
   drawGrid(cw, ch);
 
   // Compass
-  ctx.fillStyle = '#1e2830';
+  ctx.fillStyle = '#3a4a54';
   ctx.font = '11px Share Tech Mono';
-  ctx.fillStyle = '#5a6a74';
   ctx.fillText('N', cw / 2 - 4, MAP_MARGIN - 8);
   ctx.fillText('S', cw / 2 - 4, ch - MAP_MARGIN + 14);
   ctx.fillText('W', MAP_MARGIN - 20, ch / 2 + 4);
   ctx.fillText('E', cw - MAP_MARGIN + 6, ch / 2 + 4);
 
   if (!sim) {
-    ctx.fillStyle = '#2a3040';
-    ctx.font = '14px Share Tech Mono';
-    ctx.fillText('[ PRESS LAUNCH MISSION TO BEGIN ]', cw / 2 - 160, ch / 2);
+    ctx.fillStyle = '#252d38';
+    ctx.font = '13px Share Tech Mono';
+    ctx.fillText('[ PRESS LAUNCH MISSION TO BEGIN ]', cw / 2 - 170, ch / 2);
     ctx.fillStyle = '#1e2830';
-    ctx.font = '11px Share Tech Mono';
-    ctx.fillText('Foster Ranch, Lincoln County, New Mexico · 33.9°N 105.3°W', cw / 2 - 190, ch / 2 + 22);
-    drawAltitudeBar(null, cw, ch);
+    ctx.font = '10px Share Tech Mono';
+    ctx.fillText('Foster Ranch, Lincoln County, NM · 33.9°N 105.3°W', cw / 2 - 185, ch / 2 + 22);
+    drawAltBar(null, cw, ch);
     return;
   }
 
-  drawAltitudeBar(sim, cw, ch);
+  drawAltBar(sim, cw, ch);
 
-  // Wind arrow
-  const wp = worldToCanvas(WORLD_SIZE * 0.88, WORLD_SIZE * 0.12, cw, ch);
-  const wrad = (sim.p.windDir * Math.PI) / 180;
-  const wlen = 25;
+  // Wind arrow at current sim altitude
+  const windNow = getWindAtAlt(sim.alt, sim.p.soundingKey, 0);
+  const wp = worldToCanvas(WORLD_SIZE * 0.87, WORLD_SIZE * 0.10, cw, ch);
+  const wlen = Math.min(35, windNow.speed_kt * 0.35);
+  const wrad = Math.atan2(windNow.vy_fps, windNow.vx_fps);
   ctx.strokeStyle = '#4ae8c8';
   ctx.lineWidth = 1.5;
-  ctx.beginPath();
-  ctx.moveTo(wp.x, wp.y);
+  ctx.beginPath(); ctx.moveTo(wp.x, wp.y);
   ctx.lineTo(wp.x + Math.cos(wrad) * wlen, wp.y + Math.sin(wrad) * wlen);
   ctx.stroke();
   ctx.fillStyle = '#4ae8c8';
-  ctx.font = '9px Share Tech Mono';
-  ctx.fillText(`${sim.p.windSpeed}kt`, wp.x - 12, wp.y - 6);
+  ctx.font = '8px Share Tech Mono';
+  ctx.fillText(`${Math.round(windNow.speed_kt)}kt`, wp.x - 10, wp.y - 6);
 
-  // Draw debris trails
+  // Debris trails
   for (const dp of sim.debrisParticles) {
     if (dp.trail.length < 2 || dp.landed) continue;
     ctx.beginPath();
@@ -822,223 +1164,187 @@ function draw() {
       if (i === 0) ctx.moveTo(cp.x, cp.y);
       else ctx.lineTo(cp.x, cp.y);
     });
-    ctx.strokeStyle = dp.getColor() + '33';
+    ctx.strokeStyle = dp.getColor() + '28';
     ctx.lineWidth = 0.5;
     ctx.stroke();
   }
 
-  // Draw landed debris
-  let landedCount = 0;
+  // Landed debris
   for (const dp of sim.debrisParticles) {
-    if (!dp.landed || !dp.landX) continue;
-    landedCount++;
+    if (!dp.landed || dp.landX === null) continue;
     const cp = worldToCanvas(dp.landX, dp.landY, cw, ch);
     ctx.save();
     ctx.translate(cp.x, cp.y);
     ctx.rotate(dp.rotation);
-    const sz = dp.getSize() * 0.7;
-    ctx.fillStyle = dp.getColor() + 'cc';
+    const sz = dp.getSize() * 0.65;
+    ctx.fillStyle = dp.getColor() + 'bb';
     if (dp.type === 'foil' || dp.type === 'rope') {
-      ctx.fillRect(-sz, -sz / 3, sz * 2, sz / 3);
+      ctx.fillRect(-sz, -sz * 0.25, sz * 2, sz * 0.5);
     } else {
-      ctx.beginPath();
-      ctx.arc(0, 0, sz, 0, Math.PI * 2);
-      ctx.fill();
+      ctx.beginPath(); ctx.arc(0, 0, sz, 0, Math.PI * 2); ctx.fill();
     }
     ctx.restore();
   }
 
-  // Draw active particles
+  // Active (falling) debris
   for (const dp of sim.debrisParticles) {
     if (dp.landed) continue;
     const cp = worldToCanvas(dp.wx, dp.wy, cw, ch);
-    const altFade = clamp(dp.alt / 60000, 0, 1);
-    const sz = dp.getSize();
-
+    const altFrac = clamp((dp.alt - 3445) / 60000, 0, 1);
     ctx.save();
-    ctx.globalAlpha = 0.5 + altFade * 0.5;
+    ctx.globalAlpha = 0.4 + altFrac * 0.6;
     ctx.translate(cp.x, cp.y);
     ctx.rotate(dp.rotation);
+    const sz = dp.getSize();
     ctx.fillStyle = dp.getColor();
     if (dp.type === 'foil') {
-      ctx.fillRect(-sz, -sz / 3, sz * 2, sz / 3);
+      ctx.fillRect(-sz, -sz * 0.3, sz * 2, sz * 0.6);
     } else {
-      ctx.beginPath();
-      ctx.arc(0, 0, sz, 0, Math.PI * 2);
-      ctx.fill();
+      ctx.beginPath(); ctx.arc(0, 0, sz, 0, Math.PI * 2); ctx.fill();
     }
     ctx.restore();
   }
 
-  // Draw balloon train (intact portions)
-  if (sim.phase <= 3) {
+  // Balloon train body (while intact)
+  if (sim.phase <= 3 && sim.intactBalloons > 0) {
     const tp = worldToCanvas(sim.wx, sim.wy, cw, ch);
-    const intactFrac = sim.intactBalloons / sim.nBalloons;
-    const trainLenPx = (sim.p.trainLen / WORLD_SIZE) * (cw - MAP_MARGIN * 2) * intactFrac;
-    const trailDir = Math.atan2(sim.windVy, sim.windVx) + Math.PI;
+    const wind = getWindAtAlt(sim.alt, sim.p.soundingKey, 0);
+    const trainLenPx = (sim.p.trainLen / WORLD_SIZE) * (cw - MAP_MARGIN * 2) *
+      (sim.intactBalloons / sim.nBalloons);
+    const trailRad = Math.atan2(wind.vy_fps, wind.vx_fps) + Math.PI;
 
-    // Rope
     ctx.strokeStyle = '#8b6914';
     ctx.lineWidth = 1.5;
     ctx.beginPath();
     ctx.moveTo(tp.x, tp.y);
-    ctx.lineTo(tp.x + Math.cos(trailDir) * trainLenPx, tp.y + Math.sin(trailDir) * trainLenPx);
+    ctx.lineTo(tp.x + Math.cos(trailRad) * trainLenPx, tp.y + Math.sin(trailRad) * trainLenPx);
     ctx.stroke();
 
-    // Balloons along rope
     for (let i = 0; i < sim.intactBalloons; i++) {
       const frac = i / Math.max(sim.intactBalloons - 1, 1);
-      const bx2 = tp.x + Math.cos(trailDir) * trainLenPx * frac;
-      const by2 = tp.y + Math.sin(trailDir) * trainLenPx * frac;
-
-      // Glow
-      const grd = ctx.createRadialGradient(bx2, by2 - 5, 0, bx2, by2 - 5, 10);
-      grd.addColorStop(0, 'rgba(212,168,50,0.6)');
+      const bx2 = tp.x + Math.cos(trailRad) * trainLenPx * frac;
+      const by2 = tp.y + Math.sin(trailRad) * trainLenPx * frac;
+      const grd = ctx.createRadialGradient(bx2, by2 - 5, 0, bx2, by2 - 5, 9);
+      grd.addColorStop(0, 'rgba(212,168,50,0.55)');
       grd.addColorStop(1, 'rgba(212,168,50,0)');
       ctx.fillStyle = grd;
-      ctx.beginPath();
-      ctx.arc(bx2, by2 - 5, 10, 0, Math.PI * 2);
-      ctx.fill();
-
+      ctx.beginPath(); ctx.arc(bx2, by2 - 5, 9, 0, Math.PI * 2); ctx.fill();
       ctx.fillStyle = '#d4a832';
-      ctx.beginPath();
-      ctx.arc(bx2, by2 - 5, 5, 0, Math.PI * 2);
-      ctx.fill();
+      ctx.beginPath(); ctx.arc(bx2, by2 - 5, 4, 0, Math.PI * 2); ctx.fill();
     }
 
-    // Main body glow at train center
-    const glowGrd = ctx.createRadialGradient(tp.x, tp.y, 0, tp.x, tp.y, 20);
-    glowGrd.addColorStop(0, 'rgba(232,200,74,0.3)');
+    const glowGrd = ctx.createRadialGradient(tp.x, tp.y, 0, tp.x, tp.y, 18);
+    glowGrd.addColorStop(0, 'rgba(232,200,74,0.28)');
     glowGrd.addColorStop(1, 'rgba(232,200,74,0)');
     ctx.fillStyle = glowGrd;
-    ctx.beginPath();
-    ctx.arc(tp.x, tp.y, 20, 0, Math.PI * 2);
-    ctx.fill();
+    ctx.beginPath(); ctx.arc(tp.x, tp.y, 18, 0, Math.PI * 2); ctx.fill();
   }
 
   // Debris field bounding box
   if (sim.debrisLanded > 5 && sim.minX !== Infinity) {
     const mn = worldToCanvas(sim.minX, sim.minY, cw, ch);
     const mx = worldToCanvas(sim.maxX, sim.maxY, cw, ch);
-    ctx.strokeStyle = 'rgba(232,200,74,0.25)';
+    ctx.strokeStyle = 'rgba(232,200,74,0.22)';
     ctx.lineWidth = 1;
     ctx.setLineDash([5, 5]);
     ctx.strokeRect(mn.x, mn.y, mx.x - mn.x, mx.y - mn.y);
     ctx.setLineDash([]);
-
-    // Labels
-    const fw = Math.round((sim.maxX - sim.minX) / 5280 * 10) / 10;
-    const fl = Math.round((sim.maxY - sim.minY) / 5280 * 10) / 10;
-    ctx.fillStyle = 'rgba(232,200,74,0.6)';
+    const fw = ((sim.maxX - sim.minX) / 5280).toFixed(2);
+    const fl = ((sim.maxY - sim.minY) / 5280).toFixed(2);
+    ctx.fillStyle = 'rgba(232,200,74,0.55)';
     ctx.font = '9px Share Tech Mono';
-    ctx.fillText(`${fw} mi`, (mn.x + mx.x) / 2 - 15, mn.y - 4);
+    ctx.fillText(`${fw} mi`, (mn.x + mx.x) / 2 - 16, mn.y - 4);
     ctx.fillText(`${fl} mi`, mx.x + 4, (mn.y + mx.y) / 2);
   }
 
-  // HUD Update
-  const phaseNames = ['IDLE', 'ASCENT', 'CRUISE', 'SYSTEM FAILURE', 'CASCADE', 'IMPACT'];
+  // HUD
+  const phaseNames = ['IDLE','ASCENT','CRUISE','CASCADE FAILURE','SCATTER','IMPACT'];
+  const windNowHud = getWindAtAlt(sim.alt, sim.p.soundingKey, 0);
+  const rho = ISA.density(sim.alt * FT_TO_M).toFixed(4);
+  const ambP = ISA.pressure(sim.alt * FT_TO_M);
+  const expansionRatio = (sim.launchPressure_Pa / ambP).toFixed(3);
+  const deltaP = expansionRatio; // repurposed to show ratio
+
   document.getElementById('hudAlt').textContent = Math.round(sim.alt).toLocaleString();
+  document.getElementById('hudRho').textContent = rho;
+  document.getElementById('hudWindAlt').textContent =
+    `${Math.round(windNowHud.speed_kt)}kt @ ${Math.round(windNowHud.dir_deg)}°`;
   document.getElementById('hudPhase').textContent = phaseNames[sim.phase] || '—';
-  document.getElementById('hudWind').textContent = `${sim.p.windSpeed}kt @ ${sim.p.windDir}°`;
   document.getElementById('hudIntact').textContent = sim.intactBalloons + '/' + sim.nBalloons;
+  document.getElementById('hudDP').textContent = deltaP + ' (ratio, burst@1.5)';
   document.getElementById('hudDebris').textContent = sim.debrisParticles.length;
   document.getElementById('hudTime').textContent = Math.round(sim.time);
 
-  if (sim.minX !== Infinity) {
-    const fw = (((sim.maxX - sim.minX) / 5280) * 10) / 10;
-    const fl = (((sim.maxY - sim.minY) / 5280) * 10) / 10;
-    document.getElementById('hudFieldW').textContent = fw.toFixed(1) + ' mi';
-    document.getElementById('hudFieldL').textContent = fl.toFixed(1) + ' mi';
+  if (sim.minX !== Infinity && isFinite(sim.maxX - sim.minX)) {
+    document.getElementById('hudFieldW').textContent =
+      ((sim.maxX - sim.minX) / 5280).toFixed(2) + ' mi';
+    document.getElementById('hudFieldL').textContent =
+      ((sim.maxY - sim.minY) / 5280).toFixed(2) + ' mi';
   } else {
     document.getElementById('hudFieldW').textContent = '—';
     document.getElementById('hudFieldL').textContent = '—';
   }
 
-  if (sim.phase === 5 || (sim.phase >= 3 && sim.intactBalloons === 0)) {
-    const allLanded = sim.debrisParticles.every(d => d.landed);
-    if (allLanded && sim.debrisParticles.length > 0) {
-      // Summary
-      ctx.fillStyle = 'rgba(10,12,15,0.7)';
-      const bx2 = cw / 2 - 180, by2 = ch / 2 - 60;
-      ctx.fillRect(bx2, by2, 360, 120);
-      ctx.strokeStyle = '#e8c84a';
-      ctx.lineWidth = 1;
-      ctx.strokeRect(bx2, by2, 360, 120);
+  // Completion overlay
+  if (sim.phase >= 4) {
+    // Complete when all particles are either landed with coords OR marked escaped (landed=true, landX=null)
+    const allLanded = sim.debrisParticles.length > 0 &&
+      sim.debrisParticles.every(d => d.landed);
+    if (allLanded) {
+      ctx.fillStyle = 'rgba(10,12,15,0.72)';
+      const bx2 = cw / 2 - 190, by2 = ch / 2 - 65;
+      ctx.fillRect(bx2, by2, 380, 130);
+      ctx.strokeStyle = '#e8c84a'; ctx.lineWidth = 1;
+      ctx.strokeRect(bx2, by2, 380, 130);
       ctx.fillStyle = '#e8c84a';
-      ctx.font = '12px Oswald';
-      ctx.fillText('DEBRIS FIELD COMPLETE', bx2 + 90, by2 + 22);
-      ctx.fillStyle = '#c8d4dc';
-      ctx.font = '10px Share Tech Mono';
-      const fw = (((sim.maxX - sim.minX) / 5280) * 10) / 10;
-      const fl = (((sim.maxY - sim.minY) / 5280) * 10) / 10;
-      ctx.fillText(`Field Width:   ${fw.toFixed(2)} miles`, bx2 + 20, by2 + 45);
-      ctx.fillText(`Field Length:  ${fl.toFixed(2)} miles`, bx2 + 20, by2 + 62);
-      ctx.fillText(`Total Pieces:  ${sim.debrisLanded}`, bx2 + 20, by2 + 79);
-      ctx.fillText(`Consistent with Foster Ranch 1947 field:`, bx2 + 20, by2 + 96);
-      const match = fw < 5 && fl < 12 ? '✓ YES (~3/4 mi × 2.5 mi reported)' : '✗ Outside historical range';
-      ctx.fillStyle = fw < 5 && fl < 12 ? '#4ae8c8' : '#e84a4a';
-      ctx.fillText(match, bx2 + 20, by2 + 113);
+      ctx.font = '600 13px Oswald';
+      ctx.fillText('DEBRIS FIELD COMPLETE', bx2 + 95, by2 + 24);
+      ctx.fillStyle = '#c8d4dc'; ctx.font = '10px Share Tech Mono';
+      // Field size based on balloon landing positions only
+      const grounded = sim.debrisParticles.filter(d => d.type === 'balloon' && d.landed && d.landX !== null);
+      const escaped = sim.debrisParticles.filter(d => d.type === 'balloon' && d.landed && d.landX === null).length;
+      const fw2 = grounded.length > 0 ? ((sim.maxX - sim.minX) / 5280).toFixed(3) : '0';
+      const fl2 = grounded.length > 0 ? ((sim.maxY - sim.minY) / 5280).toFixed(3) : '0';
+      const area = (parseFloat(fw2) * parseFloat(fl2)).toFixed(4);
+      ctx.fillText(`Field Width:    ${fw2} miles`, bx2 + 20, by2 + 48);
+      ctx.fillText(`Field Length:   ${fl2} miles`, bx2 + 20, by2 + 65);
+      ctx.fillText(`Field Area:     ${area} sq.mi`, bx2 + 20, by2 + 82);
+      ctx.fillText(`Balloons Landed: ${grounded.length}  Escaped: ${escaped}`, bx2 + 20, by2 + 99);
+      ctx.fillText(`Sounding: ${SOUNDINGS[sim.p.soundingKey].label.split('—')[0].trim()}`, bx2 + 20, by2 + 116);
+      const match = parseFloat(fw2) < 5 && parseFloat(fl2) < 12;
+      ctx.fillStyle = match ? '#4ae8c8' : '#e84a4a';
+      const matchTxt = match ? '✓ Consistent with Foster Ranch 1947 report' : '✗ Outside historical field dimensions';
+      ctx.fillText(matchTxt, bx2 + 20, by2 + 125);
       saveRun(sim);
-      document.getElementById('statusMsg').textContent = 'SIMULATION COMPLETE — Run #' + runCounter + ' saved';
+      document.getElementById('statusMsg').textContent =
+        'SIMULATION COMPLETE — Run #' + runCounter + ' saved';
     }
   }
 }
 
+// =============================================================================
+// SIMULATION LOOP
+// =============================================================================
+let sim = null;
+let animId = null;
+let paused = false;
+let lastTime = null;
+let runLog = [];
+let runCounter = 0;
+let currentRunSaved = false;
 
-function saveRun(s) {
-  if (currentRunSaved) return;
-  currentRunSaved = true;
-  runCounter++;
-
-  const fieldWidthFt = s.maxX - s.minX;
-  const fieldLengthFt = s.maxY - s.minY;
-
-  const debrisByType = {};
-  for (const dp of s.debrisParticles) {
-    if (!dp.landed) continue;
-    debrisByType[dp.type] = (debrisByType[dp.type] || 0) + 1;
-  }
-
-  const landedPieces = s.debrisParticles
-    .filter(d => d.landed && d.landX !== null)
-    .map(d => ({
-      type: d.type,
-      landX_ft: Math.round(d.landX),
-      landY_ft: Math.round(d.landY),
-      distFromOrigin_ft: Math.round(Math.hypot(d.landX - s.wx, d.landY - s.wy))
-    }));
-
-  const record = {
-    runId: runCounter,
-    timestamp: new Date().toISOString(),
-    params: {
-      nBalloons: s.p.nBalloons,
-      initAlt_ft: s.p.initAlt,
-      trainLength_ft: s.p.trainLen,
-      windSpeed_kt: s.p.windSpeed,
-      windDir_deg: s.p.windDir,
-      windShear_kt_per_kft: s.p.windShear,
-      turbulence: s.p.turbulence,
-      failureAlt_ft: s.p.failAlt,
-      cascadeRate: s.p.cascadeRate,
-    },
-    results: {
-      failureAlt_ft: Math.round(s.alt),
-      simulationTime_s: Math.round(s.time),
-      totalDebrisPieces: s.debrisLanded,
-      debrisByType,
-      fieldWidth_ft: Math.round(fieldWidthFt),
-      fieldLength_ft: Math.round(fieldLengthFt),
-      fieldWidth_mi: parseFloat((fieldWidthFt / 5280).toFixed(3)),
-      fieldLength_mi: parseFloat((fieldLengthFt / 5280).toFixed(3)),
-      fieldArea_sqmi: parseFloat(((fieldWidthFt / 5280) * (fieldLengthFt / 5280)).toFixed(4)),
-      historicalMatch: fieldWidthFt / 5280 < 5 && fieldLengthFt / 5280 < 12,
-    },
-    debrisPieces: landedPieces,
+function getParams() {
+  return {
+    nBalloons:    +document.getElementById('nBalloons').value,
+    trainLen:     +document.getElementById('trainLen').value,
+    balloonVol:   +document.getElementById('balloonVol').value,
+    soundingKey:  document.getElementById('soundingDate').value,
+    turbulence:   +document.getElementById('turbulence').value,
+    failAlt:      +document.getElementById('failAlt').value,
+    burstMode:    +document.getElementById('burstMode').value,
+    cascadeRate:  +document.getElementById('cascadeRate').value,
+    simSpeed:     +document.getElementById('simSpeed').value,
   };
-
-  runLog.push(record);
-  document.getElementById('runCount').textContent = runLog.length + ' run' + (runLog.length !== 1 ? 's' : '') + ' logged';
 }
 
 function loop(ts) {
@@ -1046,8 +1352,8 @@ function loop(ts) {
     if (!lastTime) lastTime = ts;
     const raw = (ts - lastTime) / 1000;
     lastTime = ts;
-    const dt = Math.min(raw, 0.1) * sim.p.simSpeed;
-    sim.update(dt);
+    const dt = Math.min(raw, 0.05) * sim.p.simSpeed;
+    sim.update(dt, sim.p.soundingKey, sim.p.turbulence);
   } else if (!sim) {
     lastTime = null;
   } else {
@@ -1057,12 +1363,59 @@ function loop(ts) {
   animId = requestAnimationFrame(loop);
 }
 
+// =============================================================================
+// UI BINDINGS
+// =============================================================================
+function bindSlider(id, valId, fmt) {
+  const el = document.getElementById(id);
+  const vel = document.getElementById(valId);
+  const turbLabels  = { 0: 'None', 1: 'Low', 2: 'Med', 3: 'High' };
+  const cascLabels  = { 1: 'Slow', 2: 'Fast', 3: 'Instant' };
+  const burstLabels = { 1: 'Pressure', 2: 'Altitude' };
+  el.addEventListener('input', () => {
+    if (fmt === 'turb')  vel.textContent = turbLabels[el.value];
+    else if (fmt === 'casc')  vel.textContent = cascLabels[el.value];
+    else if (fmt === 'burst') {
+      vel.textContent = burstLabels[el.value];
+      document.getElementById('burstDesc').textContent =
+        el.value == 1 ? 'Differential pressure threshold (ISA-based)' : 'Simple altitude threshold';
+    }
+    else if (fmt === 'speed') vel.textContent = el.value + 'x';
+    else if (fmt === 'f2')    vel.textContent = parseFloat(el.value).toFixed(1);
+    else vel.textContent = Number(el.value).toLocaleString();
+  });
+  el.dispatchEvent(new Event('input'));
+}
+
+bindSlider('nBalloons',   'vBalloons');
+bindSlider('trainLen',    'vLen');
+bindSlider('balloonVol',  'vVol', 'f2');
+bindSlider('turbulence',  'vTurb', 'turb');
+bindSlider('failAlt',     'vFailAlt');
+bindSlider('burstMode',   'vBurstMode', 'burst');
+bindSlider('cascadeRate', 'vCasc', 'casc');
+bindSlider('simSpeed',    'vSpeed', 'speed');
+
+document.getElementById('soundingDate').addEventListener('change', (e) => {
+  const badges = {
+    jul8_1947: 'NOAA RECONSTRUCTED',
+    jul2_1947: 'ESTIMATED',
+    calm: 'SYNTHETIC',
+    strong_jet: 'SYNTHETIC',
+  };
+  document.getElementById('soundingBadge').textContent = badges[e.target.value] || '';
+  drawWindProfile(e.target.value);
+});
+
+// Initial wind profile draw
+drawWindProfile('jul8_1947');
+
 document.getElementById('btnRun').addEventListener('click', () => {
   const p = getParams();
   sim = new BalloonTrain(p);
   currentRunSaved = false;
   paused = false;
-  document.getElementById('statusMsg').textContent = 'SIMULATION RUNNING';
+  document.getElementById('statusMsg').textContent = 'SIMULATION RUNNING — RK4 TRAJECTORY ACTIVE';
   if (!animId) animId = requestAnimationFrame(loop);
 });
 
@@ -1075,12 +1428,12 @@ document.getElementById('btnPause').addEventListener('click', () => {
 document.getElementById('btnReset').addEventListener('click', () => {
   sim = null;
   paused = false;
-  document.getElementById('statusMsg').textContent = 'READY';
   document.getElementById('btnPause').textContent = '⏸ PAUSE';
-  document.getElementById('debrisList').innerHTML = '<div style="color:var(--accent2);margin-bottom:4px">DEBRIS INVENTORY</div>Simulation not started.';
-  ['hudAlt','hudPhase','hudWind','hudIntact','hudFieldW','hudFieldL'].forEach(id => {
-    document.getElementById(id).textContent = '—';
-  });
+  document.getElementById('statusMsg').textContent = 'READY';
+  document.getElementById('debrisList').innerHTML =
+    '<div style="color:var(--accent2);margin-bottom:4px">DEBRIS INVENTORY</div>Simulation not started.';
+  ['hudAlt','hudRho','hudWindAlt','hudPhase','hudIntact','hudDP','hudFieldW','hudFieldL']
+    .forEach(id => { document.getElementById(id).textContent = '—'; });
   document.getElementById('hudDebris').textContent = '0';
   document.getElementById('hudTime').textContent = '0';
   ['ph1','ph2','ph3','ph4','ph5'].forEach(id => {
@@ -1092,45 +1445,102 @@ document.getElementById('btnReset').addEventListener('click', () => {
 canvas.addEventListener('click', (e) => {
   if (!sim) return;
   const rect = canvas.getBoundingClientRect();
-  const cx = e.clientX - rect.left;
-  const cy = e.clientY - rect.top;
-  const wp = canvasToWorld(cx, cy, canvas.width, canvas.height);
-
+  const wp = canvasToWorld(e.clientX - rect.left, e.clientY - rect.top, canvas.width, canvas.height);
   let closest = null, closestD = Infinity;
   for (const dp of sim.debrisParticles) {
     const px = dp.landed ? dp.landX : dp.wx;
     const py = dp.landed ? dp.landY : dp.wy;
+    if (px === null) continue;
     const d = Math.hypot(px - wp.x, py - wp.y);
     if (d < closestD) { closestD = d; closest = dp; }
   }
-
   if (closest && closestD < 3000) {
     const typeNames = {
       balloon: 'Neoprene Balloon (ML-126)',
-      foil: 'Foil Corner Reflector',
-      radar: 'ML-307B Radar Target',
-      instrument: 'Instrument Package',
-      rope: 'Nylon Rope Segment',
-      ballast: 'Ballast Bag'
+      foil: 'Foil Corner Reflector (ML-307)',
+      radar: 'Radar Target Assembly',
+      instrument: 'Radiosonde/Instrument Pkg',
+      rope: 'Nylon Suspension Cord',
+      ballast: 'Sand Ballast Bag'
     };
+    const rho2 = ISA.density(closest.alt * FT_TO_M).toFixed(4);
     document.getElementById('statusMsg').textContent =
-      `SELECTED: ${typeNames[closest.type] || closest.type} | ` +
-      `ALT: ${Math.round(closest.alt).toLocaleString()}ft | ` +
-      `STATUS: ${closest.landed ? 'LANDED' : 'FALLING'}`;
+      `${typeNames[closest.type]} | ALT: ${Math.round(closest.alt).toLocaleString()}ft | ` +
+      `ρ: ${rho2} kg/m³ | Cd: ${closest.Cd.toFixed(2)} | ` +
+      `Vz: ${closest.vz.toFixed(1)} fps | ${closest.landed ? 'LANDED' : 'FALLING'}`;
   }
 });
 
+// =============================================================================
+// RUN LOGGING + EXPORT
+// =============================================================================
+function saveRun(s) {
+  if (currentRunSaved) return;
+  currentRunSaved = true;
+  runCounter++;
+
+  const fwFt = isFinite(s.maxX - s.minX) ? s.maxX - s.minX : 0;
+  const flFt = isFinite(s.maxY - s.minY) ? s.maxY - s.minY : 0;
+  const debrisByType = {};
+  for (const dp of s.debrisParticles) {
+    if (!dp.landed) continue;
+    debrisByType[dp.type] = (debrisByType[dp.type] || 0) + 1;
+  }
+  const landedPieces = s.debrisParticles
+    .filter(d => d.landed && d.landX !== null)
+    .map(d => ({
+      type: d.type,
+      landX_ft: Math.round(d.landX),
+      landY_ft: Math.round(d.landY),
+      distFromOrigin_ft: Math.round(Math.hypot(d.landX - s.wx, d.landY - s.wy)),
+      Cd: parseFloat(d.Cd.toFixed(3)),
+      mass_kg: parseFloat(d.mass_kg.toFixed(4)),
+    }));
+
+  runLog.push({
+    runId: runCounter,
+    timestamp: new Date().toISOString(),
+    physicsModel: {
+      atmosphere: 'ICAO ISA (4-layer: troposphere, tropopause, lower/upper stratosphere)',
+      windProfile: SOUNDINGS[s.p.soundingKey].label,
+      integrator: 'Runge-Kutta 4th order',
+      dragModel: 'F = 0.5 * rho(ISA,alt) * Cd * A * V_rel^2',
+      burstModel: s.p.burstMode === 1 ? 'Differential pressure threshold (62 Pa)' : 'Altitude threshold',
+    },
+    params: {
+      nBalloons: s.p.nBalloons,
+      trainLength_ft: s.p.trainLen,
+      balloonVolume_m3: s.p.balloonVol,
+      soundingKey: s.p.soundingKey,
+      turbulenceLevel: s.p.turbulence,
+      failureAlt_ft: s.p.failAlt,
+      cascadeRate: s.p.cascadeRate,
+    },
+    results: {
+      actualBurstAlt_ft: Math.round(s.alt),
+      simulationTime_s: Math.round(s.time),
+      totalDebrisPieces: s.debrisLanded,
+      debrisByType,
+      fieldWidth_ft: Math.round(fwFt),
+      fieldLength_ft: Math.round(flFt),
+      fieldWidth_mi: parseFloat((fwFt / 5280).toFixed(4)),
+      fieldLength_mi: parseFloat((flFt / 5280).toFixed(4)),
+      fieldArea_sqmi: parseFloat(((fwFt / 5280) * (flFt / 5280)).toFixed(5)),
+      historicalMatch: fwFt / 5280 < 5 && flFt / 5280 < 12,
+    },
+    debrisPieces: landedPieces,
+  });
+
+  document.getElementById('runCount').textContent =
+    runLog.length + ' run' + (runLog.length !== 1 ? 's' : '') + ' logged';
+}
 
 document.getElementById('btnExport').addEventListener('click', () => {
   if (runLog.length === 0) {
-    document.getElementById('statusMsg').textContent = 'NO RUNS LOGGED YET — complete at least one simulation';
+    document.getElementById('statusMsg').textContent = 'NO RUNS LOGGED — complete at least one simulation';
     return;
   }
-  const payload = {
-    exportedAt: new Date().toISOString(),
-    totalRuns: runLog.length,
-    runs: runLog,
-  };
+  const payload = { exportedAt: new Date().toISOString(), totalRuns: runLog.length, runs: runLog };
   const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -1138,8 +1548,17 @@ document.getElementById('btnExport').addEventListener('click', () => {
   a.download = 'mogul_debris_runs.json';
   a.click();
   URL.revokeObjectURL(url);
-  document.getElementById('statusMsg').textContent = `EXPORTED ${runLog.length} run(s) → mogul_debris_runs.json`;
+  document.getElementById('statusMsg').textContent =
+    `EXPORTED ${runLog.length} run(s) → mogul_debris_runs.json`;
 });
+
+// =============================================================================
+// INIT
+// =============================================================================
+function resize() {
+  canvas.width = canvas.offsetWidth;
+  canvas.height = canvas.offsetHeight;
+}
 
 window.addEventListener('resize', resize);
 resize();
